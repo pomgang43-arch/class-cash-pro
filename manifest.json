@@ -1,0 +1,21 @@
+{
+  "name": "Class Cash Master Pro",
+  "short_name": "Class Cash",
+  "description": "ระบบจัดการเงินกองกลาง วิทยาลัยเทคโนโลยีผดุงเสนาบริหารธุรกิจ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e0f2fe",
+  "theme_color": "#c084fc",
+  "icons": [
+    {
+      "src": "app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
