@@ -417,11 +417,30 @@
             document.getElementById('rpContent').innerHTML = `<div class="bg-slate-100 p-4 rounded-2xl border mb-3"><div class="flex justify-between mb-2"><span>🎯 เก็บค่าห้อง:</span><span class="text-pGreen font-bold">+฿${cm}</span></div><div class="flex justify-between mb-2"><span>💰 รับฝาก:</span><span class="text-pBlue font-bold">+฿${dp}</span></div><div class="flex justify-between mb-2"><span>💸 ถอน:</span><span class="text-rose-500 font-bold">-฿${wt}</span></div><div class="flex justify-between mb-3"><span>📉 รายจ่ายห้อง:</span><span class="text-amber-500 font-bold">-฿${exp}</span></div><div class="border-t border-slate-300 pt-3 flex justify-between items-center text-base"><span class="font-bold">เงินสดรับจริงวันนี้:</span><span class="${net>=0?'text-pGreen':'text-rose-500'} font-display font-bold text-2xl">${net>=0?'+':''}฿${net}</span></div></div>`;
         }
 
-        // ==========================================
-        // 🚀 ระบบ PWA
+       // ==========================================
+        // 🚀 ระบบเปิดการทำงาน PWA แบบ Inline (สำหรับ Vercel)
         // ==========================================
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
+            window.addEventListener('load', () => {
+                // เปลี่ยนมาใช้การลงทะเบียนผ่าน Data URI เพื่อแก้ปัญหาไฟล์ sw.js บน Vercel
+                const swCode = `
+                    const CACHE_NAME = 'class-cash-final-v2';
+                    const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png'];
+                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); });
+                    self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const blobUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(blobUrl, { scope: './' })
+                .then(registration => {
+                    console.log('PWA Inline Service Worker สำเร็จ!', registration.scope);
+                })
+                .catch(err => {
+                    // หากเบราว์เซอร์บางรุ่นไม่รองรับ Blob ให้ถอยกลับไปเรียกไฟล์ sw.js ตามปกติ
+                    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+                });
+            });
         }
     </script>
 </body>
