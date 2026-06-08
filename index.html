@@ -162,6 +162,11 @@
                     <button onclick="resetSystem()" class="btn-bouncy py-2 bg-rose-50 rounded-xl font-semibold text-rose-600 hover:bg-rose-100 text-sm border border-rose-200 shadow-sm"><i class="fa-solid fa-trash-can mr-1"></i> ล้างระบบ</button>
                 </div>
 
+                <!-- 🌟 นี่คือปุ่มเริ่มวันใหม่ที่เราเพิ่มเข้ามาครับ -->
+                <div class="mb-6 mt-2">
+                    <button onclick="forceResetNewDay()" class="btn-bouncy w-full py-2 bg-orange-50 rounded-xl font-semibold text-orange-600 hover:bg-orange-100 text-sm border border-orange-200 shadow-sm"><i class="fa-solid fa-sun mr-1"></i> บังคับเริ่มวันใหม่ (เคลียร์ปุ่มให้กลับเป็นค้างจ่าย)</button>
+                </div>
+
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-bold text-slate-700 text-lg">จัดการรายชื่อ</h3>
                     <button onclick="addNewStudent()" class="btn-bouncy bg-pBlue text-white px-3 py-1.5 rounded-xl text-sm font-bold shadow-md hover:bg-sky-500">+ เพิ่มนักเรียน</button>
@@ -454,6 +459,24 @@
                     navigator.serviceWorker.register('./sw.js').catch(()=>{});
                 });
             });
+        }
+        window.forceResetNewDay = async () => {
+            const { isConfirmed } = await Swal.fire({
+                title: 'เริ่มเก็บเงินวันใหม่?',
+                text: "ปุ่มสถานะของนักเรียนทุกคนจะเปลี่ยนกลับเป็น 'ค้างจ่าย' (ยอดเงินส่วนตัวและหนี้สะสมจะไม่หายไป)",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f97316',
+                cancelButtonText: 'ยกเลิก'
+            });
+            if (isConfirmed) {
+                appState.students.forEach(s => s.classMoneyPaid = false);
+                appState.lastActiveDate = getTodayDateString();
+                await saveState();
+                renderUI(); // สั่งให้อัปเดตหน้าจอทันที
+                Swal.fire({icon: 'success', title: 'สำเร็จ!', text: 'เคลียร์สถานะสำหรับวันใหม่เรียบร้อยแล้ว', timer: 2000, showConfirmButton: false});
+                closeAdminPanel();
+            }
         }
     </script>
 </body>
