@@ -233,6 +233,19 @@
                     appState.students = Array.isArray(data.students) ? data.students : [];
                     appState.classExpenses = Array.isArray(data.classExpenses) ? data.classExpenses : [];
                     appState.students.forEach(s => { if(!s.pin)s.pin="0000"; if(!s.history)s.history=[]; if(s.cumulativeDebt===undefined)s.cumulativeDebt=0; if(s.streak===undefined)s.streak=0; });
+                    
+                    // 🔥 เริ่ม: โค้ดบังคับรีเซ็ตปุ่มจ่ายเงินเมื่อขึ้นวันใหม่โดยอัตโนมัติ
+                    const todayStr = getTodayDateString();
+                    if (!appState.lastActiveDate) {
+                        appState.lastActiveDate = todayStr;
+                        saveState();
+                    } else if (appState.lastActiveDate !== todayStr) {
+                        appState.students.forEach(s => s.classMoneyPaid = false);
+                        appState.lastActiveDate = todayStr;
+                        saveState();
+                    }
+                    // 🔥 จบ: โค้ดบังคับรีเซ็ต
+                    
                     badge.innerHTML = "🟢 ออนไลน์ (Real-time)";
                 } else { saveState(); badge.innerHTML = "🟢 เริ่มต้นระบบใหม่"; }
                 if(document.getElementById('stat-total')) renderUI();
