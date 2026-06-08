@@ -9,8 +9,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="app-icon.png">
-    <link rel="icon" type="image/png" href="app-icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="app-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="app-icon.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -162,7 +162,6 @@
                     <button onclick="resetSystem()" class="btn-bouncy py-2 bg-rose-50 rounded-xl font-semibold text-rose-600 hover:bg-rose-100 text-sm border border-rose-200 shadow-sm"><i class="fa-solid fa-trash-can mr-1"></i> ล้างระบบ</button>
                 </div>
 
-                <!-- 🌟 นี่คือปุ่มเริ่มวันใหม่ที่เราเพิ่มเข้ามาครับ -->
                 <div class="mb-6 mt-2">
                     <button onclick="forceResetNewDay()" class="btn-bouncy w-full py-2 bg-orange-50 rounded-xl font-semibold text-orange-600 hover:bg-orange-100 text-sm border border-orange-200 shadow-sm"><i class="fa-solid fa-sun mr-1"></i> บังคับเริ่มวันใหม่ (เคลียร์ปุ่มให้กลับเป็นค้างจ่าย)</button>
                 </div>
@@ -239,7 +238,7 @@
                     appState.classExpenses = Array.isArray(data.classExpenses) ? data.classExpenses : [];
                     appState.students.forEach(s => { if(!s.pin)s.pin="0000"; if(!s.history)s.history=[]; if(s.cumulativeDebt===undefined)s.cumulativeDebt=0; if(s.streak===undefined)s.streak=0; });
                     
-                    // 🔥 เริ่ม: โค้ดบังคับรีเซ็ตปุ่มจ่ายเงินเมื่อขึ้นวันใหม่โดยอัตโนมัติ
+                    // ระบบ Auto-Reset วันใหม่
                     const todayStr = getTodayDateString();
                     if (!appState.lastActiveDate) {
                         appState.lastActiveDate = todayStr;
@@ -249,7 +248,6 @@
                         appState.lastActiveDate = todayStr;
                         saveState();
                     }
-                    // 🔥 จบ: โค้ดบังคับรีเซ็ต
                     
                     badge.innerHTML = "🟢 ออนไลน์ (Real-time)";
                 } else { saveState(); badge.innerHTML = "🟢 เริ่มต้นระบบใหม่"; }
@@ -435,35 +433,11 @@
             document.getElementById('rpContent').innerHTML = `<div class="bg-slate-100 p-4 rounded-2xl border mb-3"><div class="flex justify-between mb-2"><span>🎯 เก็บค่าห้อง:</span><span class="text-pGreen font-bold">+฿${cm}</span></div><div class="flex justify-between mb-2"><span>💰 รับฝาก:</span><span class="text-pBlue font-bold">+฿${dp}</span></div><div class="flex justify-between mb-2"><span>💸 ถอน:</span><span class="text-rose-500 font-bold">-฿${wt}</span></div><div class="flex justify-between mb-3"><span>📉 รายจ่ายห้อง:</span><span class="text-amber-500 font-bold">-฿${exp}</span></div><div class="border-t border-slate-300 pt-3 flex justify-between items-center text-base"><span class="font-bold">เงินสดรับจริงวันนี้:</span><span class="${net>=0?'text-pGreen':'text-rose-500'} font-display font-bold text-2xl">${net>=0?'+':''}฿${net}</span></div></div>`;
         }
 
-       // ==========================================
-        // 🚀 ระบบเปิดการทำงาน PWA แบบ Inline (สำหรับ Vercel)
-        // ==========================================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // เปลี่ยนมาใช้การลงทะเบียนผ่าน Data URI เพื่อแก้ปัญหาไฟล์ sw.js บน Vercel
-                const swCode = `
-                    const CACHE_NAME = 'class-cash-final-v2';
-                    const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png'];
-                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); });
-                    self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const blobUrl = URL.createObjectURL(blob);
-                
-                navigator.serviceWorker.register(blobUrl, { scope: './' })
-                .then(registration => {
-                    console.log('PWA Inline Service Worker สำเร็จ!', registration.scope);
-                })
-                .catch(err => {
-                    // หากเบราว์เซอร์บางรุ่นไม่รองรับ Blob ให้ถอยกลับไปเรียกไฟล์ sw.js ตามปกติ
-                    navigator.serviceWorker.register('./sw.js').catch(()=>{});
-                });
-            });
-        }
+        // 🌟 ปุ่มบังคับเริ่มวันใหม่
         window.forceResetNewDay = async () => {
             const { isConfirmed } = await Swal.fire({
                 title: 'เริ่มเก็บเงินวันใหม่?',
-                text: "ปุ่มสถานะของนักเรียนทุกคนจะเปลี่ยนกลับเป็น 'ค้างจ่าย' (ยอดเงินส่วนตัวและหนี้สะสมจะไม่หายไป)",
+                text: "ปุ่มสถานะทุกคนจะเปลี่ยนกลับเป็น 'ค้างจ่าย' (เงินฝากและหนี้จะไม่หายไป)",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#f97316',
@@ -473,10 +447,27 @@
                 appState.students.forEach(s => s.classMoneyPaid = false);
                 appState.lastActiveDate = getTodayDateString();
                 await saveState();
-                renderUI(); // สั่งให้อัปเดตหน้าจอทันที
-                Swal.fire({icon: 'success', title: 'สำเร็จ!', text: 'เคลียร์สถานะสำหรับวันใหม่เรียบร้อยแล้ว', timer: 2000, showConfirmButton: false});
+                renderUI(); 
+                Swal.fire({icon: 'success', title: 'สำเร็จ!', text: 'ล้างปุ่มเตรียมเก็บเงินวันใหม่แล้ว', timer: 2000, showConfirmButton: false});
                 closeAdminPanel();
             }
+        }
+
+        // ==========================================
+        // 🚀 ระบบเปิดการทำงาน PWA (แบบ Inline เพื่อ Vercel)
+        // ==========================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'class-cash-final-v3';
+                    const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png'];
+                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); });
+                    self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const blobUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(blobUrl, { scope: './' }).catch(()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+            });
         }
     </script>
 </body>
