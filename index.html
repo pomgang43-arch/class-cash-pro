@@ -137,15 +137,27 @@
             <h2 class="font-display text-2xl font-bold text-slate-800 mb-6"><i class="fa-solid fa-shield-halved text-pPurple mr-2"></i> แผงควบคุม (Admin)</h2>
             
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <!-- 1. ล็อกข้อมูล -->
                 <button onclick="toggleDailyLock()" id="btnLockDay" class="btn-bouncy p-3 rounded-2xl bg-amber-100 text-amber-700 font-bold border border-amber-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-lock text-2xl"></i> ล็อกข้อมูล
                 </button>
-                <button onclick="promptBroadcast()" class="btn-bouncy p-3 rounded-2xl bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
+                
+                <!-- 2. ปุ่มประกาศ (โชว์เฉพาะ Co-Admin) -->
+                <button id="btnBroadcast" onclick="promptBroadcast()" class="btn-bouncy p-3 rounded-2xl bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-bullhorn text-2xl"></i> ประกาศ
                 </button>
+
+                <!-- 2. ปุ่มเริ่มวันใหม่ (โชว์เฉพาะ Super Admin สลับกับปุ่มประกาศ) -->
+                <button id="btnForceReset" onclick="forceResetNewDay()" class="hidden btn-bouncy p-3 rounded-2xl bg-orange-100 text-orange-700 font-bold border border-orange-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
+                    <i class="fa-solid fa-sun text-2xl"></i> เริ่มวันใหม่
+                </button>
+
+                <!-- 3. เป้าหมาย -->
                 <button onclick="promptEditGoal()" class="btn-bouncy p-3 rounded-2xl bg-pink-100 text-pink-700 font-bold border border-pink-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-bullseye text-2xl"></i> เป้าหมาย
                 </button>
+
+                <!-- 4. กระทบยอด -->
                 <button onclick="showDailyReport()" class="btn-bouncy p-3 rounded-2xl bg-teal-100 text-teal-700 font-bold border border-teal-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-calculator text-2xl"></i> กระทบยอด
                 </button>
@@ -389,7 +401,25 @@
         function rExp(){const c=document.getElementById('expense-list-container'); c.innerHTML=''; if(appState.classExpenses.length>0){[...appState.classExpenses].sort((a,b)=>b.ts-a.ts).forEach(e=>c.innerHTML+=`<div class="flex justify-between py-2 border-b text-sm"><span><b>${e.text}</b><br><span class="text-[10px] text-gray-400">${formatDateTime(e.ts)}</span></span><span class="text-rose-500 font-bold">-฿${e.amt}${currentRole==='SUPER_ADMIN'?`<button onclick="dExp(${e.id})" class="ml-2">❌</button>`:''}</span></div>`);}else{c.innerHTML='<p class="text-center text-slate-400 text-xs py-2">ไม่มีรายจ่าย</p>';}}
         window.dExp=async(id)=>{appState.classExpenses=appState.classExpenses.filter(e=>e.id!==id); await saveState(); rExp();}
 
-        window.openAdminPanel=function(){document.getElementById('adminModal').classList.remove('hidden'); const t=getTodayDateString(); const b=document.getElementById('btnLockDay'); if(appState.dailyLocks[t]){b.innerHTML=`<i class="fa-solid fa-unlock text-2xl"></i> ปลดล็อก`; b.className="btn-bouncy p-3 rounded-2xl bg-pGreen text-white font-bold text-center";}else{b.innerHTML=`<i class="fa-solid fa-lock text-2xl"></i> ล็อกข้อมูล`; b.className="btn-bouncy p-3 rounded-2xl bg-amber-100 text-amber-700 font-bold border text-center";} document.getElementById('superAdminSection').classList.toggle('hidden',currentRole!=='SUPER_ADMIN'); if(currentRole==='SUPER_ADMIN')rTbl();}
+        window.openAdminPanel = function() {
+            document.getElementById('adminModal').classList.remove('hidden'); 
+            const t = getTodayDateString(); 
+            const b = document.getElementById('btnLockDay'); 
+            if(appState.dailyLocks[t]){
+                b.innerHTML = `<i class="fa-solid fa-unlock text-2xl"></i> ปลดล็อก`; 
+                b.className = "btn-bouncy p-3 rounded-2xl bg-pGreen text-white font-bold text-center";
+            } else {
+                b.innerHTML = `<i class="fa-solid fa-lock text-2xl"></i> ล็อกข้อมูล`; 
+                b.className = "btn-bouncy p-3 rounded-2xl bg-amber-100 text-amber-700 font-bold border text-center";
+            } 
+            
+            // 🌟 คำสั่งเช็คสิทธิ์เพื่อแสดงซ่อนปุ่ม
+            document.getElementById('superAdminSection').classList.toggle('hidden', currentRole !== 'SUPER_ADMIN'); 
+            document.getElementById('btnBroadcast').classList.toggle('hidden', currentRole === 'SUPER_ADMIN'); // ซ่อนประกาศถ้าเป็น Super Admin
+            document.getElementById('btnForceReset').classList.toggle('hidden', currentRole !== 'SUPER_ADMIN'); // โชว์รีเซ็ตถ้าเป็น Super Admin
+
+            if(currentRole === 'SUPER_ADMIN') rTbl();
+        }
         window.closeAdminPanel=function(){document.getElementById('adminModal').classList.add('hidden');}
         window.toggleDailyLock=async function(){const t=getTodayDateString(); if(appState.dailyLocks[t]){if(currentRole!=='SUPER_ADMIN')return; appState.dailyLocks[t]=false;}else{appState.students.forEach(s=>{if(!s.classMoneyPaid)s.cumulativeDebt+=5;else s.paidCount=(s.paidCount||0)+1;}); appState.dailyLocks[t]=true; confetti();} await saveState(); closeAdminPanel();}
         window.promptBroadcast=async function(){const{value:t}=await Swal.fire({title:'ประกาศ',input:'textarea'}); if(t){appState.broadcast={text:t,timestamp:Date.now()}; await saveState(); closeAdminPanel();}}
