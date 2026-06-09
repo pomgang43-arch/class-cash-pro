@@ -231,7 +231,7 @@
         let currentRole = 'STUDENT'; let loginAttempts = 0; let lockUntil = 0;
 
         function formatDateTime(ms) { const d = new Date(ms); return d.toLocaleDateString('th-TH', {day:'2-digit', month:'short'}) + ' ' + d.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}); }
-        function getTodayDateString() { return new Date().toLocaleDateString('th-TH'); }
+        function getTodayDateString() { return new Date().toLocaleDateString('th-TH').replace(/\//g, '-'); }
         function isTodayLocked() { return appState.dailyLocks[getTodayDateString()] === true; }
 
         window.processImageFile = function(file) { return new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if(w>h){if(w>150){h*=150/w;w=150;}}else{if(h>150){w*=150/h;h=150;}} canvas.width=w;canvas.height=h; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h); resolve(canvas.toDataURL('image/jpeg',0.6)); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
@@ -489,19 +489,21 @@
 
         window.resetSystem=async()=>{const{value:v}=await Swal.fire({title:'ล้างขึ้นเทอมใหม่',text:'พิมพ์ "RESET"',input:'text'});if(v==='RESET'){appState.students.forEach(s=>{s.classMoneyPaid=false;s.personalBalance=0;s.history=[];s.cumulativeDebt=0;s.paidCount=0;s.streak=0;s.pin="0000";});appState.dailyLocks={};appState.classExpenses=[];await saveState();closeAdminPanel();}}
 
-        window.showDailyReport = function() {
+       window.showDailyReport = function() {
             let dates = new Set(); dates.add(getTodayDateString());
-            appState.students.forEach(s => { if(s.history) s.history.forEach(h => dates.add(new Date(h.ts).toLocaleDateString('th-TH'))); });
-            if(appState.classExpenses) appState.classExpenses.forEach(e => dates.add(new Date(e.ts).toLocaleDateString('th-TH')));
-            let opts = Array.from(dates).sort((a,b) => { let [d1,m1,y1]=a.split('/'); let [d2,m2,y2]=b.split('/'); return new Date(`${y2}-${m2}-${d2}`) - new Date(`${y1}-${m1}-${d1}`); }).map(d => `<option value="${d}">${d===getTodayDateString()?'วันนี้ ('+d+')':d}</option>`).join('');
+            appState.students.forEach(s => { if(s.history) s.history.forEach(h => dates.add(new Date(h.ts).toLocaleDateString('th-TH').replace(/\//g, '-'))); });
+            if(appState.classExpenses) appState.classExpenses.forEach(e => dates.add(new Date(e.ts).toLocaleDateString('th-TH').replace(/\//g, '-')));
+            
+            // แก้ไขการแยกวันที่ด้วยเครื่องหมายขีด (-) แทน (/)
+            let opts = Array.from(dates).sort((a,b) => { let [d1,m1,y1]=a.split('-'); let [d2,m2,y2]=b.split('-'); return new Date(`${y2}-${m2}-${d2}`) - new Date(`${y1}-${m1}-${d1}`); }).map(d => `<option value="${d}">${d===getTodayDateString()?'วันนี้ ('+d+')':d}</option>`).join('');
             Swal.fire({ title: '📊 กระทบยอดเงินสด', html: `<select id="rpDate" class="w-full p-3 border rounded-xl mb-4 text-center bg-slate-50 font-bold" onchange="updateDailyReportView()">${opts}</select><div id="rpContent" class="text-left text-sm"></div>`, showCloseButton: true, showConfirmButton: false, didOpen: () => updateDailyReportView() });
         }
 
         window.updateDailyReportView = function() {
             const sd = document.getElementById('rpDate').value; const td = getTodayDateString();
             let dp = 0, wt = 0, exp = 0, cm = 0;
-            appState.students.forEach(s => { if(s.history) s.history.forEach(h => { if(new Date(h.ts).toLocaleDateString('th-TH')===sd){ if(h.type.includes('ฝาก')) dp+=h.amt; if(h.type.includes('ถอน')) wt+=h.amt; } }); if (sd === td && s.classMoneyPaid) cm += 5; });
-            if(appState.classExpenses) appState.classExpenses.forEach(e => { if(new Date(e.ts).toLocaleDateString('th-TH')===sd) exp += e.amt; });
+            appState.students.forEach(s => { if(s.history) s.history.forEach(h => { if(new Date(h.ts).toLocaleDateString('th-TH').replace(/\//g, '-')===sd){ if(h.type.includes('ฝาก')) dp+=h.amt; if(h.type.includes('ถอน')) wt+=h.amt; } }); if (sd === td && s.classMoneyPaid) cm += 5; });
+            if(appState.classExpenses) appState.classExpenses.forEach(e => { if(new Date(e.ts).toLocaleDateString('th-TH').replace(/\//g, '-')===sd) exp += e.amt; });
             let net = cm + dp - wt - exp;
             document.getElementById('rpContent').innerHTML = `<div class="bg-slate-100 p-4 rounded-2xl border mb-3"><div class="flex justify-between mb-2"><span>🎯 เก็บค่าห้อง:</span><span class="text-pGreen font-bold">+฿${cm}</span></div><div class="flex justify-between mb-2"><span>💰 รับฝาก:</span><span class="text-pBlue font-bold">+฿${dp}</span></div><div class="flex justify-between mb-2"><span>💸 ถอน:</span><span class="text-rose-500 font-bold">-฿${wt}</span></div><div class="flex justify-between mb-3"><span>📉 รายจ่ายห้อง:</span><span class="text-amber-500 font-bold">-฿${exp}</span></div><div class="border-t border-slate-300 pt-3 flex justify-between items-center text-base"><span class="font-bold">เงินสดรับจริงวันนี้:</span><span class="${net>=0?'text-pGreen':'text-rose-500'} font-display font-bold text-2xl">${net>=0?'+':''}฿${net}</span></div></div>`;
         }
