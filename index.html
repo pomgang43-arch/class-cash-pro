@@ -379,7 +379,11 @@
             grid.innerHTML = '';
 
             [...appState.students].sort((a,b) => a.no - b.no).filter(s => s.name.toLowerCase().includes(search) || s.no.toString().includes(search)).forEach(s => {
-                let cm = canEdit ? (s.classMoneyPaid ? `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-pGreen text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm"><i class="fa-solid fa-check-circle"></i> จ่ายแล้ว (฿5)</button>` : `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm border hover:bg-slate-200">ค้างจ่าย (฿5)</button>`) : (s.classMoneyPaid ? `<div class="w-full py-2 bg-green-50 text-pGreen font-bold rounded-xl text-xs sm:text-sm border text-center">จ่ายห้องแล้ว</div>` : `<div class="w-full py-2 bg-rose-50 text-rose-500 font-bold rounded-xl text-xs sm:text-sm border text-center">ค้างจ่ายวันนี้</div>`);
+                // 🌟 ระบบคำนวณยอดที่ต้องจ่ายรวมหนี้
+                let dueAmt = 5 + (s.cumulativeDebt || 0);
+                
+                let cm = canEdit ? (s.classMoneyPaid ? `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-pGreen text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm"><i class="fa-solid fa-check-circle"></i> จ่ายแล้ว (฿${s.lastPaidAmt || dueAmt})</button>` : `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm border hover:bg-slate-200">ค้างจ่าย (฿${dueAmt})</button>`) : (s.classMoneyPaid ? `<div class="w-full py-2 bg-green-50 text-pGreen font-bold rounded-xl text-xs sm:text-sm border text-center">จ่ายห้องแล้ว</div>` : `<div class="w-full py-2 bg-rose-50 text-rose-500 font-bold rounded-xl text-xs sm:text-sm border text-center">ค้างจ่ายวันนี้ (฿${dueAmt})</div>`);
+                
                 let inp = canEdit ? `<div class="flex gap-1 mt-3 pt-3 border-t"><input type="number" id="dp_${s.id}" placeholder="ฝาก" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs"><button onclick="deposit(${s.id})" class="btn-bouncy bg-sky-100 text-sky-700 px-3 rounded-xl"><i class="fa-solid fa-plus"></i></button><input type="number" id="wt_${s.id}" placeholder="ถอน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs"><button onclick="withdraw(${s.id})" class="btn-bouncy bg-rose-100 text-rose-700 px-3 rounded-xl"><i class="fa-solid fa-minus"></i></button></div>` : '';
                 let db = s.cumulativeDebt > 0 ? `<span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-1.5 rounded shadow-sm">หนี้: ฿${s.cumulativeDebt}</span>` : ``;
 
@@ -387,7 +391,51 @@
             });
         }
 
-        window.toggleClassMoney=async(id)=>{const s=appState.students.find(x=>x.id===id); if(s){s.classMoneyPaid=!s.classMoneyPaid; if(s.classMoneyPaid){s.paidCount=(s.paidCount||0)+1;if(s.cumulativeDebt>=5)s.cumulativeDebt-=5;confetti({particleCount:20,origin:{y:0.8}});}else{if(s.paidCount>0)s.paidCount-=1;s.cumulativeDebt+=5;} await saveState();}}
+        window.toggleClassMoney = async (id) => {
+            const s = appState.students.find(x => x.id === id); 
+            if(s) {
+                s.classMoneyPaid = !s.classMoneyPaid; 
+                if(s.classMoneyPaid) {
+                    // ตอนกดรับเงิน: จำหนี้เก่าไว้ แล้วเก็บยอดเงิน (ค่าห้องวันนี้ + หนี้ทั้งหมด)
+                    s.lastClearedDebt = s.cumulativeDebt || 0; 
+                    s.lastPaidAmt = 5 + s.lastClearedDebt;
+                    let totalCounts = s.lastPaidAmt / 5;
+                    
+                    s.paidCount = (s.paidCount || 0) + totalCounts; // บวกเงินเข้ากองกลาง
+                    s.cumulativeDebt = 0; // ล้างหนี้เป็น 0 ทันที
+                    confetti({particleCount:30, origin:{y:0.8}});
+                } else {
+                    // ตอนกดยกเลิก (จิ้มพลาด): ดึงหนี้เก่ากลับมา และหักยอดเงินคืน
+                    let totalCounts = (s.lastPaidAmt || 5) / 5;
+                    if(s.paidCount >= totalCounts) s.paidCount -= totalCounts;
+                    s.cumulativeDebt = s.lastClearedDebt || 0; // คืนค่าหนี้
+                    s.lastClearedDebt = 0;
+                    s.lastPaidAmt = 0;
+                }
+                await saveState();
+                renderUI(); 
+            }
+        }
+
+        window.toggleDailyLock = async function() {
+            const t = getTodayDateString(); 
+            if(appState.dailyLocks[t]){
+                if(currentRole !== 'SUPER_ADMIN') return; 
+                appState.dailyLocks[t] = false;
+            } else {
+                appState.students.forEach(s => {
+                    // 🌟 ระบบทบหนี้อัตโนมัติ: ถ้าใครไม่ได้จ่ายวันนี้ ให้บวกหนี้เพิ่ม 5 บาท
+                    if(!s.classMoneyPaid) {
+                        s.cumulativeDebt = (s.cumulativeDebt || 0) + 5;
+                    }
+                }); 
+                appState.dailyLocks[t] = true; 
+                confetti();
+            } 
+            await saveState(); 
+            closeAdminPanel();
+            renderUI();
+        }
         window.deposit=async(id)=>{const a=parseInt(document.getElementById(`dp_${id}`).value); if(!a||a<=0)return; const s=appState.students.find(x=>x.id===id); s.personalBalance=(s.personalBalance||0)+a; s.streak=(s.streak||0)+1; s.history.push({ts:Date.now(),type:'ฝาก',amt:a}); document.getElementById(`dp_${id}`).value=''; await saveState(); Swal.fire({icon:'success',title:`ฝาก ฿${a}`,timer:1000,showConfirmButton:false});}
         window.withdraw=async(id)=>{const a=parseInt(document.getElementById(`wt_${id}`).value); if(!a||a<=0)return; const s=appState.students.find(x=>x.id===id); if(a>(s.personalBalance||0))return Swal.fire('เงินไม่พอ','','error'); s.personalBalance-=a; s.streak=0; s.history.push({ts:Date.now(),type:'ถอน',amt:a}); document.getElementById(`wt_${id}`).value=''; await saveState(); Swal.fire({icon:'success',title:`ถอน ฿${a}`,timer:1000,showConfirmButton:false});}
         
@@ -417,7 +465,6 @@
             if(currentRole === 'SUPER_ADMIN') rTbl();
         }
         window.closeAdminPanel=function(){document.getElementById('adminModal').classList.add('hidden');}
-        window.toggleDailyLock=async function(){const t=getTodayDateString(); if(appState.dailyLocks[t]){if(currentRole!=='SUPER_ADMIN')return; appState.dailyLocks[t]=false;}else{appState.students.forEach(s=>{if(!s.classMoneyPaid)s.cumulativeDebt+=5;else s.paidCount=(s.paidCount||0)+1;}); appState.dailyLocks[t]=true; confetti();} await saveState(); closeAdminPanel();}
         window.promptBroadcast=async function(){const{value:t}=await Swal.fire({title:'ประกาศ',input:'textarea'}); if(t){appState.broadcast={text:t,timestamp:Date.now()}; await saveState(); closeAdminPanel();}}
         window.promptEditGoal=async function(){const{value:v}=await Swal.fire({html:`<input id="gt" class="swal2-input" value="${appState.classGoal.text}"><input id="ga" type="number" class="swal2-input" value="${appState.classGoal.target}">`,preConfirm:()=>({text:document.getElementById('gt').value,target:parseInt(document.getElementById('ga').value)})}); if(v){appState.classGoal=v; await saveState(); closeAdminPanel();}}
         window.promptChangePin=async function(type){const{value:p}=await Swal.fire({title:'เปลี่ยนรหัส',input:'password',inputAttributes:{maxlength:4}}); if(p&&p.length===4){if(type==='SUPER')appState.superAdminPin=p;else appState.coAdminPin=p; await saveState(); Swal.fire('สำเร็จ','','success');}}
