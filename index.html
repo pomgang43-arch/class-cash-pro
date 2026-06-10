@@ -261,6 +261,8 @@
 
         async function saveState() { 
             try { 
+                // 🌟 โค้ดยันต์กันผี: ส่งวันที่รูปแบบเก่าไปหลอกแอปเวอร์ชันเก่าที่เปิดค้างในเครื่องอื่น ไม่ให้มันรีเซ็ตระบบ
+                appState.lastActiveDate = new Date().toLocaleDateString('th-TH');
                 await dbRef.set(appState); 
             } catch (err) { 
                 Swal.fire('Error', 'บันทึกไม่สำเร็จ: ' + err.message, 'error'); 
