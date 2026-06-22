@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Cash Master Pro</title>
     
+    <!-- PWA & หน้าจอหลัก -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,12 +13,14 @@
     <link rel="apple-touch-icon" sizes="192x192" href="app-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="app-icon.png">
     
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
     
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -46,6 +49,7 @@
 </head>
 <body class="text-slate-700 pb-24 selection:bg-pPurple/30">
 
+    <!-- Navbar -->
     <nav class="glass-panel sticky top-0 z-40 px-4 py-3 shadow-sm mb-6 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pBlue via-pPurple to-pPink flex items-center justify-center text-white shadow-md">
@@ -72,6 +76,7 @@
     </nav>
 
     <div class="max-w-5xl mx-auto px-4" id="main-content">
+        <!-- เป้าหมายห้อง -->
         <div class="glass-panel rounded-[2rem] p-5 mb-6 shadow-soft relative overflow-hidden">
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center gap-2">
@@ -97,6 +102,7 @@
             <p id="broadcastMsg" class="text-amber-800 font-medium"></p>
         </div>
 
+        <!-- หน้าปัดสถิติ -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="glass-panel rounded-3xl p-4 text-center card-hover">
                 <p class="text-[10px] font-bold text-slate-400 mb-1 tracking-wide uppercase">นักเรียน</p>
@@ -116,6 +122,7 @@
             </div>
         </div>
 
+        <!-- ช่องค้นหา -->
         <div class="flex gap-2 mb-6">
             <div class="relative flex-1">
                 <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
@@ -130,7 +137,7 @@
 
         <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
-
+    <!-- Admin Modal -->
     <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative p-6 sm:p-8">
             <button onclick="closeAdminPanel()" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy"><i class="fa-solid fa-times"></i></button>
@@ -183,6 +190,7 @@
         </div>
     </div>
 
+    <!-- Expense Modal -->
     <div id="expenseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto relative p-6">
             <button onclick="closeExpenseModal()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy"><i class="fa-solid fa-times"></i></button>
@@ -203,7 +211,7 @@
 
     <script>
         // ==========================================
-        // 🔥 การเชื่อมต่อ Firebase
+        // 🔥 การเชื่อมต่อ Firebase & การตั้งค่า
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBwt6DK12lt5zTso4mTi-B3GJE7Af8y54M",
@@ -242,31 +250,20 @@
                     
                     appState.students.forEach(s => { if(!s.pin)s.pin="0000"; if(!s.history)s.history=[]; if(s.cumulativeDebt===undefined)s.cumulativeDebt=0; if(s.streak===undefined)s.streak=0; });
                     
-                    // ระบบ Auto-Reset วันใหม่
-                    const todayStr = getTodayDateString();
-                    if (!appState.lastActiveDate) {
-                        appState.lastActiveDate = todayStr;
-                        saveState();
-                    } else if (appState.lastActiveDate !== todayStr) {
-                        appState.students.forEach(s => s.classMoneyPaid = false);
-                        appState.lastActiveDate = todayStr;
-                        saveState();
-                    }
-                    
+                    // 🌟 ลบโค้ด Auto-reset (ผีสิง) ออกทั้งหมดแล้ว เพื่อให้แอดมินกดเปลี่ยนวันเองเท่านั้น
                     badge.innerHTML = "🟢 ออนไลน์ (Real-time)";
-                } else { saveState(); badge.innerHTML = "🟢 เริ่มต้นระบบใหม่"; }
+                } else { 
+                    saveState(); badge.innerHTML = "🟢 เริ่มต้นระบบใหม่"; 
+                }
                 if(document.getElementById('stat-total')) renderUI();
             }, () => { badge.innerHTML = "🔴 เชื่อมต่อล้มเหลว"; });
         };
 
         async function saveState() { 
             try { 
-                // 🌟 โค้ดยันต์กันผี: ส่งวันที่รูปแบบเก่าไปหลอกแอปเวอร์ชันเก่าที่เปิดค้างในเครื่องอื่น ไม่ให้มันรีเซ็ตระบบ
-                appState.lastActiveDate = new Date().toLocaleDateString('th-TH');
                 await dbRef.set(appState); 
             } catch (err) { 
                 Swal.fire('Error', 'บันทึกไม่สำเร็จ: ' + err.message, 'error'); 
-                console.error(err);
             } 
         }
 
@@ -352,7 +349,6 @@
             });
             if (isConfirmed) { s.avatar = finalUrl; await saveState(); Swal.fire({ icon:'success', title:'อัปเดตสำเร็จ', timer:1500, showConfirmButton:false }); }
         }
-
         function renderUI() {
             try {
                 document.getElementById('btnLogin').classList.toggle('hidden', currentRole !== 'STUDENT');
@@ -377,7 +373,7 @@
             } catch(e) {}
         }
 
-        // 🌟 รวมยอดหนี้และค่าห้อง
+        // 🌟 รวมยอดหนี้และค่าห้องในปุ่มเดียว
         window.renderStudents = function() {
             const grid = document.getElementById('studentGrid'); const search = document.getElementById('searchInput').value.toLowerCase();
             const locked = isTodayLocked(); const canEdit = currentRole !== 'STUDENT' && (!locked || currentRole === 'SUPER_ADMIN');
@@ -394,7 +390,7 @@
             });
         }
 
-        // 🌟 จ่ายและล้างหนี้รวดเดียว
+        // 🌟 กดจ่ายปุ๊บ ล้างหนี้ และบวกกองกลาง 100%
         window.toggleClassMoney = async (id) => {
             const s = appState.students.find(x => x.id === id); 
             if(s) {
@@ -427,7 +423,7 @@
         function rExp(){const c=document.getElementById('expense-list-container'); c.innerHTML=''; if(appState.classExpenses.length>0){[...appState.classExpenses].sort((a,b)=>b.ts-a.ts).forEach(e=>c.innerHTML+=`<div class="flex justify-between py-2 border-b text-sm"><span><b>${e.text}</b><br><span class="text-[10px] text-gray-400">${formatDateTime(e.ts)}</span></span><span class="text-rose-500 font-bold">-฿${e.amt}${currentRole==='SUPER_ADMIN'?`<button onclick="dExp(${e.id})" class="ml-2">❌</button>`:''}</span></div>`);}else{c.innerHTML='<p class="text-center text-slate-400 text-xs py-2">ไม่มีรายจ่าย</p>';}}
         window.dExp=async(id)=>{appState.classExpenses=appState.classExpenses.filter(e=>e.id!==id); await saveState(); rExp();}
 
-        // 🌟 แผงควบคุมแบ่งสิทธิ์
+        // 🌟 แบ่งสิทธิ์มองเห็นปุ่มชัดเจน
         window.openAdminPanel = function() {
             document.getElementById('adminModal').classList.remove('hidden'); 
             const t = getTodayDateString(); 
@@ -449,7 +445,7 @@
 
         window.closeAdminPanel=function(){document.getElementById('adminModal').classList.add('hidden');}
         
-        // 🌟 ล็อกข้อมูลพร้อมทบหนี้อัตโนมัติ
+        // 🌟 ล็อกข้อมูล + ระบบทบหนี้อัตโนมัติ
         window.toggleDailyLock = async function() {
             const t = getTodayDateString(); 
             if(!appState.dailyLocks) appState.dailyLocks = {};
@@ -495,15 +491,11 @@
 
         window.resetSystem=async()=>{const{value:v}=await Swal.fire({title:'ล้างขึ้นเทอมใหม่',text:'พิมพ์ "RESET"',input:'text'});if(v==='RESET'){appState.students.forEach(s=>{s.classMoneyPaid=false;s.personalBalance=0;s.history=[];s.cumulativeDebt=0;s.paidCount=0;s.streak=0;s.pin="0000";});appState.dailyLocks={};appState.classExpenses=[];await saveState();closeAdminPanel();}}
 
-        // 🌟 ล้างเฉพาะเงินกองกลาง
         window.resetClassFund = async () => {
             const { isConfirmed } = await Swal.fire({
                 title: 'ล้างยอดกองกลางเป็น 0?',
                 text: "ยอดเงินกองกลางจะเริ่มนับใหม่ตั้งแต่ 0 (เงินฝากและหนี้สะสมจะไม่หายไป)",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3b82f6',
-                cancelButtonText: 'ยกเลิก'
+                icon: 'warning', showCancelButton: true, confirmButtonColor: '#3b82f6', cancelButtonText: 'ยกเลิก'
             });
             if (isConfirmed) {
                 appState.students.forEach(s => { s.paidCount = 0; s.classMoneyPaid = false; });
@@ -530,7 +522,7 @@
             document.getElementById('rpContent').innerHTML = `<div class="bg-slate-100 p-4 rounded-2xl border mb-3"><div class="flex justify-between mb-2"><span>🎯 เก็บค่าห้อง:</span><span class="text-pGreen font-bold">+฿${cm}</span></div><div class="flex justify-between mb-2"><span>💰 รับฝาก:</span><span class="text-pBlue font-bold">+฿${dp}</span></div><div class="flex justify-between mb-2"><span>💸 ถอน:</span><span class="text-rose-500 font-bold">-฿${wt}</span></div><div class="flex justify-between mb-3"><span>📉 รายจ่ายห้อง:</span><span class="text-amber-500 font-bold">-฿${exp}</span></div><div class="border-t border-slate-300 pt-3 flex justify-between items-center text-base"><span class="font-bold">เงินสดรับจริงวันนี้:</span><span class="${net>=0?'text-pGreen':'text-rose-500'} font-display font-bold text-2xl">${net>=0?'+':''}฿${net}</span></div></div>`;
         }
 
-        // 🌟 เริ่มวันใหม่แบบเคลียร์สถานะ
+        // 🌟 เริ่มวันใหม่แบบเคลียร์สถานะโดย Super Admin เท่านั้น
         window.forceResetNewDay = async () => {
             const { isConfirmed } = await Swal.fire({
                 title: 'เริ่มเก็บเงินวันใหม่?',
@@ -545,14 +537,15 @@
         }
 
         // ==========================================
-        // 🚀 ระบบเปิดการทำงาน PWA (แบบ Inline)
+        // 🚀 อัปเดตเวอร์ชัน PWA (ล้างแคชเครื่องเด็กอัตโนมัติ)
         // ==========================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'class-cash-final-v4';
+                    const CACHE_NAME = 'class-cash-final-v6';
                     const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png'];
-                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); });
+                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); });
+                    self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); });
                     self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });
                 `;
                 const blob = new Blob([swCode], { type: 'application/javascript' });
