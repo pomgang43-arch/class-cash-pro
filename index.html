@@ -357,7 +357,8 @@
                 roleBadge.textContent = currentRole === 'SUPER_ADMIN' ? '👑 Super' : '🛠️ Co-Admin';
                 roleBadge.className = currentRole === 'SUPER_ADMIN' ? 'hidden sm:inline-block px-3 py-1 bg-gradient-to-r from-pPurple to-pPink text-white text-xs font-bold rounded-full shadow-sm' : 'hidden sm:inline-block px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-500 text-white text-xs font-bold rounded-full shadow-sm';
 
-                const total = appState.students.length; const paid = appState.students.filter(s => s.classMoneyPaid).length;
+                // 🌟 อัปเดตการนับยอดจากตัวแปรใหม่ isPaidToday
+                const total = appState.students.length; const paid = appState.students.filter(s => s.isPaidToday).length;
                 const expenses = appState.classExpenses.reduce((s, e) => s + e.amt, 0); const collected = appState.students.reduce((s, st) => s + (st.paidCount || 0) * 5, 0);
                 const net = collected - expenses;
 
@@ -373,7 +374,6 @@
             } catch(e) {}
         }
 
-        // 🌟 รวมยอดหนี้และค่าห้องในปุ่มเดียว
         window.renderStudents = function() {
             const grid = document.getElementById('studentGrid'); const search = document.getElementById('searchInput').value.toLowerCase();
             const locked = isTodayLocked(); const canEdit = currentRole !== 'STUDENT' && (!locked || currentRole === 'SUPER_ADMIN');
@@ -382,7 +382,8 @@
 
             [...appState.students].sort((a,b) => a.no - b.no).filter(s => s.name.toLowerCase().includes(search) || s.no.toString().includes(search)).forEach(s => {
                 let dueAmt = 5 + (s.cumulativeDebt || 0);
-                let cm = canEdit ? (s.classMoneyPaid ? `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-pGreen text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm"><i class="fa-solid fa-check-circle"></i> จ่ายแล้ว (฿${s.lastPaidAmt || dueAmt})</button>` : `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm border hover:bg-slate-200">ค้างจ่าย (฿${dueAmt})</button>`) : (s.classMoneyPaid ? `<div class="w-full py-2 bg-green-50 text-pGreen font-bold rounded-xl text-xs sm:text-sm border text-center">จ่ายห้องแล้ว</div>` : `<div class="w-full py-2 bg-rose-50 text-rose-500 font-bold rounded-xl text-xs sm:text-sm border text-center">ค้างจ่ายวันนี้ (฿${dueAmt})</div>`);
+                // 🌟 เปลี่ยนมาใช้ isPaidToday ในการแสดงปุ่ม
+                let cm = canEdit ? (s.isPaidToday ? `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-pGreen text-white font-bold rounded-xl text-xs sm:text-sm shadow-sm"><i class="fa-solid fa-check-circle"></i> จ่ายแล้ว (฿${s.lastPaidAmt || dueAmt})</button>` : `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm border hover:bg-slate-200">ค้างจ่าย (฿${dueAmt})</button>`) : (s.isPaidToday ? `<div class="w-full py-2 bg-green-50 text-pGreen font-bold rounded-xl text-xs sm:text-sm border text-center">จ่ายห้องแล้ว</div>` : `<div class="w-full py-2 bg-rose-50 text-rose-500 font-bold rounded-xl text-xs sm:text-sm border text-center">ค้างจ่ายวันนี้ (฿${dueAmt})</div>`);
                 let inp = canEdit ? `<div class="flex gap-1 mt-3 pt-3 border-t"><input type="number" id="dp_${s.id}" placeholder="ฝาก" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs"><button onclick="deposit(${s.id})" class="btn-bouncy bg-sky-100 text-sky-700 px-3 rounded-xl"><i class="fa-solid fa-plus"></i></button><input type="number" id="wt_${s.id}" placeholder="ถอน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs"><button onclick="withdraw(${s.id})" class="btn-bouncy bg-rose-100 text-rose-700 px-3 rounded-xl"><i class="fa-solid fa-minus"></i></button></div>` : '';
                 let db = s.cumulativeDebt > 0 ? `<span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-1.5 rounded shadow-sm">หนี้: ฿${s.cumulativeDebt}</span>` : ``;
 
@@ -390,12 +391,11 @@
             });
         }
 
-        // 🌟 กดจ่ายปุ๊บ ล้างหนี้ และบวกกองกลาง 100%
         window.toggleClassMoney = async (id) => {
             const s = appState.students.find(x => x.id === id); 
             if(s) {
-                s.classMoneyPaid = !s.classMoneyPaid; 
-                if(s.classMoneyPaid) {
+                s.isPaidToday = !s.isPaidToday; 
+                if(s.isPaidToday) {
                     s.lastClearedDebt = s.cumulativeDebt || 0; 
                     s.lastPaidAmt = 5 + s.lastClearedDebt;
                     let totalCounts = s.lastPaidAmt / 5;
@@ -423,7 +423,6 @@
         function rExp(){const c=document.getElementById('expense-list-container'); c.innerHTML=''; if(appState.classExpenses.length>0){[...appState.classExpenses].sort((a,b)=>b.ts-a.ts).forEach(e=>c.innerHTML+=`<div class="flex justify-between py-2 border-b text-sm"><span><b>${e.text}</b><br><span class="text-[10px] text-gray-400">${formatDateTime(e.ts)}</span></span><span class="text-rose-500 font-bold">-฿${e.amt}${currentRole==='SUPER_ADMIN'?`<button onclick="dExp(${e.id})" class="ml-2">❌</button>`:''}</span></div>`);}else{c.innerHTML='<p class="text-center text-slate-400 text-xs py-2">ไม่มีรายจ่าย</p>';}}
         window.dExp=async(id)=>{appState.classExpenses=appState.classExpenses.filter(e=>e.id!==id); await saveState(); rExp();}
 
-        // 🌟 แบ่งสิทธิ์มองเห็นปุ่มชัดเจน
         window.openAdminPanel = function() {
             document.getElementById('adminModal').classList.remove('hidden'); 
             const t = getTodayDateString(); 
@@ -445,7 +444,6 @@
 
         window.closeAdminPanel=function(){document.getElementById('adminModal').classList.add('hidden');}
         
-        // 🌟 ล็อกข้อมูล + ระบบทบหนี้อัตโนมัติ
         window.toggleDailyLock = async function() {
             const t = getTodayDateString(); 
             if(!appState.dailyLocks) appState.dailyLocks = {};
@@ -455,7 +453,7 @@
                 appState.dailyLocks[t] = false;
             } else {
                 appState.students.forEach(s => {
-                    if(!s.classMoneyPaid) {
+                    if(!s.isPaidToday) { // 🌟 ใช้ตัวแปรใหม่ในการทบหนี้
                         s.cumulativeDebt = (s.cumulativeDebt || 0) + 5;
                     }
                 }); 
@@ -476,7 +474,7 @@
         window.edD=async(id)=>{const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({title:'แก้หนี้',input:'number',inputValue:s.cumulativeDebt});if(v){s.cumulativeDebt=parseInt(v);await saveState();rTbl();}}
         window.edP=async(id)=>{const s=appState.students.find(x=>x.id===id);const{value:p}=await Swal.fire({title:`PIN 4 หลัก`,input:'password'});if(p&&p.length===4){s.pin=p;await saveState();Swal.fire('สำเร็จ','','success');}}
         window.edS=async(id)=>{const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({html:`<input id="en" value="${s.no}" class="swal2-input"><input id="enm" value="${s.name}" class="swal2-input">`,preConfirm:()=>({no:document.getElementById('en').value,name:document.getElementById('enm').value})});if(v){s.no=v.no;s.name=v.name;await saveState();rTbl();}}
-        window.addNewStudent=async()=>{const{value:v}=await Swal.fire({html:`<input id="an" placeholder="เลขที่" class="swal2-input"><input id="anm" placeholder="ชื่อ" class="swal2-input">`,preConfirm:()=>({no:document.getElementById('an').value,name:document.getElementById('anm').value})});if(v){appState.students.push({id:Date.now(),no:v.no,name:v.name,avatar:`https://api.dicebear.com/7.x/fun-emoji/svg?seed=${Date.now()}`,classMoneyPaid:false,personalBalance:0,pin:"0000",history:[],cumulativeDebt:0,streak:0});await saveState();rTbl();}}
+        window.addNewStudent=async()=>{const{value:v}=await Swal.fire({html:`<input id="an" placeholder="เลขที่" class="swal2-input"><input id="anm" placeholder="ชื่อ" class="swal2-input">`,preConfirm:()=>({no:document.getElementById('an').value,name:document.getElementById('anm').value})});if(v){appState.students.push({id:Date.now(),no:v.no,name:v.name,avatar:`https://api.dicebear.com/7.x/fun-emoji/svg?seed=${Date.now()}`,isPaidToday:false,personalBalance:0,pin:"0000",history:[],cumulativeDebt:0,streak:0});await saveState();rTbl();}}
         window.del=async(id)=>{appState.students=appState.students.filter(x=>x.id!==id);await saveState();rTbl();}
         
         window.exportToExcel = function() {
@@ -489,7 +487,7 @@
             link.href = URL.createObjectURL(blob); link.download = `รายงานเงินห้อง_${getTodayDateString().replace(/\//g,'-')}.csv`; document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
-        window.resetSystem=async()=>{const{value:v}=await Swal.fire({title:'ล้างขึ้นเทอมใหม่',text:'พิมพ์ "RESET"',input:'text'});if(v==='RESET'){appState.students.forEach(s=>{s.classMoneyPaid=false;s.personalBalance=0;s.history=[];s.cumulativeDebt=0;s.paidCount=0;s.streak=0;s.pin="0000";});appState.dailyLocks={};appState.classExpenses=[];await saveState();closeAdminPanel();}}
+        window.resetSystem=async()=>{const{value:v}=await Swal.fire({title:'ล้างขึ้นเทอมใหม่',text:'พิมพ์ "RESET"',input:'text'});if(v==='RESET'){appState.students.forEach(s=>{s.isPaidToday=false;s.personalBalance=0;s.history=[];s.cumulativeDebt=0;s.paidCount=0;s.streak=0;s.pin="0000";});appState.dailyLocks={};appState.classExpenses=[];await saveState();closeAdminPanel();}}
 
         window.resetClassFund = async () => {
             const { isConfirmed } = await Swal.fire({
@@ -498,13 +496,12 @@
                 icon: 'warning', showCancelButton: true, confirmButtonColor: '#3b82f6', cancelButtonText: 'ยกเลิก'
             });
             if (isConfirmed) {
-                appState.students.forEach(s => { s.paidCount = 0; s.classMoneyPaid = false; });
+                appState.students.forEach(s => { s.paidCount = 0; s.isPaidToday = false; });
                 appState.classExpenses = []; appState.dailyLocks = {}; appState.lastActiveDate = getTodayDateString();
                 await saveState(); renderUI(); Swal.fire({icon: 'success', title: 'สำเร็จ!', timer: 2000, showConfirmButton: false}); closeAdminPanel();
             }
         }
 
-        // 🌟 รายงานยอดประจำวันแบบปลอด Error
         window.showDailyReport = function() {
             let dates = new Set(); dates.add(getTodayDateString());
             appState.students.forEach(s => { if(s.history) s.history.forEach(h => dates.add(getCleanDateString(h.ts))); });
@@ -516,13 +513,12 @@
         window.updateDailyReportView = function() {
             const sd = document.getElementById('rpDate').value; const td = getTodayDateString();
             let dp = 0, wt = 0, exp = 0, cm = 0;
-            appState.students.forEach(s => { if(s.history) s.history.forEach(h => { if(getCleanDateString(h.ts)===sd){ if(h.type.includes('ฝาก')) dp+=h.amt; if(h.type.includes('ถอน')) wt+=h.amt; } }); if (sd === td && s.classMoneyPaid) cm += 5; });
+            appState.students.forEach(s => { if(s.history) s.history.forEach(h => { if(getCleanDateString(h.ts)===sd){ if(h.type.includes('ฝาก')) dp+=h.amt; if(h.type.includes('ถอน')) wt+=h.amt; } }); if (sd === td && s.isPaidToday) cm += 5; });
             if(appState.classExpenses) appState.classExpenses.forEach(e => { if(getCleanDateString(e.ts)===sd) exp += e.amt; });
             let net = cm + dp - wt - exp;
             document.getElementById('rpContent').innerHTML = `<div class="bg-slate-100 p-4 rounded-2xl border mb-3"><div class="flex justify-between mb-2"><span>🎯 เก็บค่าห้อง:</span><span class="text-pGreen font-bold">+฿${cm}</span></div><div class="flex justify-between mb-2"><span>💰 รับฝาก:</span><span class="text-pBlue font-bold">+฿${dp}</span></div><div class="flex justify-between mb-2"><span>💸 ถอน:</span><span class="text-rose-500 font-bold">-฿${wt}</span></div><div class="flex justify-between mb-3"><span>📉 รายจ่ายห้อง:</span><span class="text-amber-500 font-bold">-฿${exp}</span></div><div class="border-t border-slate-300 pt-3 flex justify-between items-center text-base"><span class="font-bold">เงินสดรับจริงวันนี้:</span><span class="${net>=0?'text-pGreen':'text-rose-500'} font-display font-bold text-2xl">${net>=0?'+':''}฿${net}</span></div></div>`;
         }
 
-        // 🌟 เริ่มวันใหม่แบบเคลียร์สถานะโดย Super Admin เท่านั้น
         window.forceResetNewDay = async () => {
             const { isConfirmed } = await Swal.fire({
                 title: 'เริ่มเก็บเงินวันใหม่?',
@@ -530,19 +526,19 @@
                 icon: 'warning', showCancelButton: true, confirmButtonColor: '#f97316', cancelButtonText: 'ยกเลิก'
             });
             if (isConfirmed) {
-                appState.students.forEach(s => s.classMoneyPaid = false);
+                appState.students.forEach(s => s.isPaidToday = false);
                 appState.lastActiveDate = getTodayDateString();
                 await saveState(); renderUI(); Swal.fire({icon: 'success', title: 'สำเร็จ!', timer: 2000, showConfirmButton: false}); closeAdminPanel();
             }
         }
 
         // ==========================================
-        // 🚀 อัปเดตเวอร์ชัน PWA (ล้างแคชเครื่องเด็กอัตโนมัติ)
+        // 🚀 อัปเดตเวอร์ชัน PWA
         // ==========================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'class-cash-final-v6';
+                    const CACHE_NAME = 'class-cash-final-v7';
                     const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png'];
                     self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); });
                     self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); });
