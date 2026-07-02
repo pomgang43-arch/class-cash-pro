@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Cash Master Pro V8</title>
     
+    <!-- PWA Setting -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,12 +13,14 @@
     <link rel="apple-touch-icon" sizes="192x192" href="app-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="app-icon.png">
     
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
     
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -46,6 +49,7 @@
 </head>
 <body class="text-slate-700 pb-24 selection:bg-pPurple/30">
 
+    <!-- Navbar -->
     <nav class="glass-panel sticky top-0 z-40 px-4 py-3 shadow-sm mb-6 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pBlue via-pPurple to-pPink flex items-center justify-center text-white shadow-md">
@@ -75,6 +79,7 @@
     </nav>
 
     <div class="max-w-5xl mx-auto px-4" id="main-content">
+        <!-- เป้าหมายห้องเรียน -->
         <div class="glass-panel rounded-[2rem] p-5 mb-6 shadow-soft relative overflow-hidden border-l-4 border-l-pPurple">
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center gap-2">
@@ -100,6 +105,7 @@
             <p id="broadcastMsg" class="text-amber-800 text-sm font-medium"></p>
         </div>
 
+        <!-- แผงสถิติรวม -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="glass-panel rounded-3xl p-4 text-center card-hover border-b-4 border-b-slate-400">
                 <p class="text-[10px] font-bold text-slate-400 mb-1 tracking-wide uppercase">สมาชิกทั้งหมด</p>
@@ -119,6 +125,7 @@
             </div>
         </div>
 
+        <!-- แถบค้นหา -->
         <div class="flex gap-2 mb-6">
             <div class="relative flex-1">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
@@ -134,6 +141,7 @@
         <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
+    <!-- Admin Controls Modal -->
     <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative p-6 sm:p-8 border border-purple-100">
             <button onclick="closeAdminPanel()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
@@ -192,6 +200,7 @@
         </div>
     </div>
 
+    <!-- Expense Modal -->
     <div id="expenseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto relative p-6 border border-amber-100">
             <button onclick="closeExpenseModal()" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times"></i></button>
@@ -210,7 +219,7 @@
         </div>
     </div>
 
-    <!-- QR Code Modal (ดีไซน์ใหม่ รับรูป my-qr.jpg ใหญ่เต็มตา) -->
+    <!-- QR Code Modal (ดีไซน์กดเพื่อขยาย) -->
     <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm relative p-6 sm:p-8 text-center border border-emerald-100">
             <button onclick="closeQrModal()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
@@ -219,14 +228,17 @@
             
             <div class="bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-4 rounded-3xl mb-5 flex flex-col items-center justify-center">
                 
-                <!-- ขยายขนาดตรงนี้ให้เต็มความกว้าง (max-w-[280px] aspect-square) -->
-                <div class="w-full max-w-[280px] aspect-square bg-white rounded-2xl flex items-center justify-center relative shadow-lg overflow-hidden border border-slate-200 p-2">
-                    
+                <div class="w-48 h-48 bg-white rounded-2xl flex items-center justify-center relative shadow-md overflow-hidden border border-slate-200 p-2 cursor-pointer transition-transform hover:scale-105" onclick="zoomQr()">
+                    <!-- ปุ่มแว่นขยายบอกใบ้ว่ากดได้ -->
+                    <div class="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <i class="fa-solid fa-magnifying-glass-plus text-slate-700 text-3xl drop-shadow-md"></i>
+                    </div>
+                    <!-- รูป QR Code -->
                     <img src="my-qr.jpg" alt="QR Code" class="w-full h-full object-contain">
-                    
                 </div>
                 
-                <p class="text-sm text-slate-500 mt-4 font-medium">กรุณาตรวจสอบยอดเงินคงค้าง<br>ก่อนสแกนยอดทุกครั้ง</p>
+                <p class="text-sm text-emerald-600 mt-4 font-bold"><i class="fa-regular fa-hand-pointer"></i> แตะที่รูปเพื่อขยายใหญ่</p>
+                <p class="text-[11px] text-slate-500 mt-1 font-medium">กรุณาตรวจสอบยอดเงินคงค้าง<br>ก่อนสแกนยอดทุกครั้ง</p>
             </div>
             
             <button onclick="closeQrModal()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-base btn-bouncy shadow-md">ปิดหน้าต่างนี้</button>
@@ -300,8 +312,23 @@
             }
         }
         window.logout = function() { currentRole = 'STUDENT'; closeAdminPanel(); renderUI(); Swal.fire({ icon: 'info', title: 'คืนสู่โหมดผู้ชม', timer: 1000, showConfirmButton: false }); }
+        
         window.openQrModal = function() { document.getElementById('qrModal').classList.remove('hidden'); }
         window.closeQrModal = function() { document.getElementById('qrModal').classList.add('hidden'); }
+        
+        // ฟังก์ชันซูม QR Code
+        window.zoomQr = function() {
+            closeQrModal();
+            Swal.fire({
+                imageUrl: 'my-qr.jpg',
+                imageAlt: 'QR Code สำหรับโอนเงิน',
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: 'auto',
+                padding: '1rem',
+                didClose: () => { openQrModal(); } // ปิดแล้วกลับมาหน้าต่างเดิม
+            });
+        }
 
         window.viewStudentBalance = async function(id) {
             const s = appState.students.find(x => x.id === id); if (!s) return;
@@ -463,7 +490,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `const CACHE_NAME = 'class-cash-v8.3'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
+                const swCode = `const CACHE_NAME = 'class-cash-v8.4'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
                 const blob = new Blob([swCode], { type: 'application/javascript' }); const blobUrl = URL.createObjectURL(blob);
                 navigator.serviceWorker.register(blobUrl, { scope: './' }).catch(()=>{});
             });
