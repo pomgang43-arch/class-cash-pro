@@ -223,12 +223,18 @@
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm relative p-6 text-center border">
             <button onclick="closeQrModal()" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times"></i></button>
             <h3 class="font-bold text-slate-800 text-lg mb-4"><i class="fa-solid fa-qrcode text-emerald-500"></i> สแกนจ่ายเงินเข้าห้อง</h3>
+            
             <div class="bg-slate-50 border-2 border-dashed p-4 rounded-3xl mb-4 flex flex-col items-center justify-center">
-                <!-- เปลี่ยนเป็นแบบนี้แทน -->
-<div class="w-48 h-48 bg-slate-50 rounded-2xl flex items-center justify-center relative shadow-md overflow-hidden border border-slate-200">
-    <!-- เปลี่ยนชื่อ my-qr.jpg ตรงนี้ให้ตรงกับชื่อไฟล์รูปที่คุณอัปโหลด -->
-    <img src="my-qr.jpg" alt="QR Code พร้อมเพย์" class="w-full h-full object-contain">
-</div>
+                <div class="w-48 h-48 bg-white rounded-2xl flex items-center justify-center relative shadow-md overflow-hidden border border-slate-200 p-2">
+                    
+                    <img src="my-qr.jpg" alt="QR PromptPay" class="w-full h-full object-contain">
+                    
+                </div>
+                <p class="text-xs text-slate-500 mt-3 font-medium">กรุณาตรวจสอบยอดเงินคงค้าง<br>ก่อนสแกนยอดทุกครั้ง</p>
+            </div>
+            <button onclick="closeQrModal()" class="w-full py-2.5 bg-slate-800 text-white font-bold rounded-xl text-sm btn-bouncy">ปิดหน้าต่างนี้</button>
+        </div>
+    </div>
                 <p class="text-xs text-slate-500 mt-3 font-medium">กรุณาตรวจสอบยอดเงินคงค้างของตนเอง<br>ก่อนสแกนยอดทุกครั้งเพื่อความถูกต้อง</p>
             </div>
             <button onclick="closeQrModal()" class="w-full py-2.5 bg-slate-800 text-white font-bold rounded-xl text-sm btn-bouncy">ปิดหน้าต่างนี้</button>
