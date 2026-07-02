@@ -144,7 +144,7 @@
     <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative p-6 sm:p-8 border border-purple-100">
             <button onclick="closeAdminPanel()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
-            <h2 class="font-display text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-pPurple"></i> ศูนย์ควบคุมนิรภัยกลาง (Admin Hub)</h2>
+            <h2 class="font-display text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-pPurple"></i> ศูนย์ควบคุมนิรภัยกลาง</h2>
             
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <button onclick="toggleDailyLock()" id="btnLockDay" class="btn-bouncy p-4 rounded-2xl bg-amber-50 text-amber-700 font-bold border border-amber-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
@@ -153,27 +153,23 @@
                 <button id="btnBroadcast" onclick="promptBroadcast()" class="btn-bouncy p-4 rounded-2xl bg-indigo-50 text-indigo-700 font-bold border border-indigo-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-bullhorn text-2xl"></i> เขียนประกาศ
                 </button>
-                <button id="btnForceReset" onclick="forceResetNewDay()" class="hidden btn-bouncy p-4 rounded-2xl bg-orange-50 text-orange-700 font-bold border border-orange-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
-                    <i class="fa-solid fa-sun text-2xl"></i> สลับวันใหม่
-                </button>
                 <button onclick="promptEditGoal()" class="btn-bouncy p-4 rounded-2xl bg-pink-50 text-pink-700 font-bold border border-pink-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-bullseye text-2xl"></i> แก้ไขเป้าหมาย
                 </button>
-                <button onclick="showDailyReport()" class="btn-bouncy p-4 rounded-2xl bg-teal-50 text-teal-700 font-bold border border-teal-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm col-span-2 sm:col-span-4">
-                    <i class="fa-solid fa-chart-line text-2xl"></i> ตรวจสอบยอด / รายงาน Ledger ประจำวัน
+                <button onclick="showDailyReport()" class="btn-bouncy p-4 rounded-2xl bg-teal-50 text-teal-700 font-bold border border-teal-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm col-span-2 sm:col-span-1">
+                    <i class="fa-solid fa-chart-line text-2xl"></i> รายงาน Ledger
                 </button>
             </div>
 
             <div id="superAdminSection" class="hidden">
                 <div class="h-px bg-slate-200 mb-6"></div>
-                <h3 class="font-bold text-slate-800 mb-3 text-lg flex items-center gap-1"><i class="fa-solid fa-crown text-amber-500"></i> สิทธิ์สูงสุด Super Admin Only</h3>
+                <h3 class="font-bold text-slate-800 mb-3 text-lg flex items-center gap-1"><i class="fa-solid fa-crown text-amber-500"></i> สิทธิ์สูงสุด Super Admin</h3>
                 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
                     <button onclick="promptChangePin('SUPER')" class="btn-bouncy py-2.5 bg-slate-100 rounded-xl font-semibold text-slate-700 hover:bg-slate-200 text-xs sm:text-sm">เปลี่ยนรหัส Super</button>
                     <button onclick="promptChangePin('CO')" class="btn-bouncy py-2.5 bg-slate-100 rounded-xl font-semibold text-slate-700 hover:bg-slate-200 text-xs sm:text-sm">เปลี่ยนรหัส Co-Admin</button>
-                    <button onclick="exportToExcel()" class="btn-bouncy py-2.5 bg-emerald-50 rounded-xl font-semibold text-emerald-600 hover:bg-emerald-100 text-xs sm:text-sm border border-emerald-200 shadow-sm"><i class="fa-solid fa-file-excel mr-1"></i> โหลดรายงาน Excel</button>
+                    <button onclick="exportToExcel()" class="btn-bouncy py-2.5 bg-emerald-50 rounded-xl font-semibold text-emerald-600 hover:bg-emerald-100 text-xs sm:text-sm border border-emerald-200 shadow-sm"><i class="fa-solid fa-file-excel mr-1"></i> โหลด Excel</button>
                     <button onclick="resetSystem()" class="btn-bouncy py-2.5 bg-rose-50 rounded-xl font-semibold text-rose-600 hover:bg-rose-100 text-xs sm:text-sm border border-rose-200 shadow-sm"><i class="fa-solid fa-trash-can mr-1"></i> รีเซ็ตระบบใหม่</button>
-                    <button onclick="resetClassFund()" class="btn-bouncy py-2.5 bg-blue-50 rounded-xl font-semibold text-blue-600 hover:bg-blue-100 text-xs sm:text-sm border border-blue-200 shadow-sm col-span-2 sm:col-span-4"><i class="fa-solid fa-wallet mr-1"></i> ล้างเฉพาะกองกลางเริ่มต้นใหม่เป็น 0</button>
                 </div>
 
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
@@ -211,7 +207,7 @@
             <div id="expenseAdminControls" class="hidden bg-amber-50 p-4 rounded-2xl border border-amber-100 mb-4 shadow-sm">
                 <p class="text-xs font-bold text-amber-900 mb-2">➕ บันทึกใบเสร็จ / รายจ่ายใหม่</p>
                 <div class="flex flex-col gap-2">
-                    <input type="text" id="exp-text" placeholder="คำอธิบายรายจ่าย (เช่น ซื้อชีทเรียน, อุปกรณ์บอร์ด)" class="w-full p-2.5 text-sm rounded-xl border border-slate-200 outline-none focus:ring-1 focus:ring-amber-400">
+                    <input type="text" id="exp-text" placeholder="คำอธิบายรายจ่าย (เช่น ซื้อชีทเรียน)" class="w-full p-2.5 text-sm rounded-xl border border-slate-200 outline-none focus:ring-1 focus:ring-amber-400">
                     <div class="flex gap-2">
                         <input type="number" id="exp-amt" placeholder="จำนวนเงิน (฿)" class="w-full p-2.5 text-sm rounded-xl border border-slate-200 outline-none focus:ring-1 focus:ring-amber-400">
                         <button onclick="addExpenseItem()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm btn-bouncy">บันทึกยอด</button>
@@ -240,9 +236,6 @@
         </div>
     </div>
     <script>
-        // ==========================================
-        // 🔥 การกำหนดค่าระบบนิรภัยเครือข่าย Firebase V8
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBwt6DK12lt5zTso4mTi-B3GJE7Af8y54M",
             authDomain: "class-cash-pro.firebaseapp.com",
@@ -257,7 +250,7 @@
         const database = firebase.database();
         const dbRef = database.ref('classCashStateV8'); 
 
-        let appState = { students: [], dailyLocks: {}, superAdminPin: "2499", coAdminPin: "5678", broadcast: null, classExpenses: [], classGoal: { text: "เป้าหมายเงินกองกลางห้องเรียน", target: 3000 }, ledger: [] };
+        let appState = { students: [], dailyLocks: {}, superAdminPin: "2499", coAdminPin: "5678", broadcast: null, classExpenses: [], classGoal: { text: "เป้าหมายเงินกองกลางห้องเรียน", target: 3000 }, ledger: [], lastActiveDate: "" };
         let currentRole = 'STUDENT'; let loginAttempts = 0; let lockUntil = 0;
 
         function formatDateTime(ms) { const d = new Date(ms); return d.toLocaleDateString('th-TH', {day:'2-digit', month:'short'}) + ' ' + d.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}); }
@@ -277,6 +270,7 @@
                     appState.classExpenses = Array.isArray(data.classExpenses) ? data.classExpenses : [];
                     appState.ledger = Array.isArray(data.ledger) ? data.ledger : [];
                     if(!appState.dailyLocks) appState.dailyLocks = {};
+                    if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
                     
                     appState.students.forEach(s => { if(!s.pin)s.pin="0000"; if(!s.history)s.history=[]; if(s.cumulativeDebt===undefined)s.cumulativeDebt=0; if(s.streak===undefined)s.streak=0; });
                     badge.innerHTML = "🟢 นิรภัยศูนย์กลางควบคุมออนไลน์ (V8)";
@@ -294,13 +288,23 @@
             if (Date.now() < lockUntil) { Swal.fire('ล็อกระบบชั่วคราว', `กรุณารออีก ${Math.ceil((lockUntil - Date.now())/1000)} วินาที`, 'warning'); return; }
             const { value: pin } = await Swal.fire({ title: 'สแกนรหัสผ่านชั้นความลับ', input: 'password', inputAttributes: { maxlength: 4 }, showCancelButton: true, confirmButtonColor: '#a855f7' });
             if (pin) {
-                if (pin === appState.superAdminPin) { loginAttempts = 0; currentRole = 'SUPER_ADMIN'; Swal.fire({ icon: 'success', title: 'สิทธิ์ผู้ควบคุมระบบ (Super Admin)', timer: 1500, showConfirmButton: false }); } 
-                else if (pin === appState.coAdminPin) { loginAttempts = 0; currentRole = 'CO_ADMIN'; Swal.fire({ icon: 'success', title: 'สิทธิ์ผู้ร่วมดูแล (Co-Admin)', timer: 1500, showConfirmButton: false }); } 
-                else { loginAttempts++; if (loginAttempts >= 3) { lockUntil = Date.now() + (5 * 60 * 1000); Swal.fire('บล็อกสิทธิ์ 5 นาที', 'กรอกรหัสผ่านผิดเกินกำหนด', 'error'); } else { Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error'); } }
+                if (pin === appState.superAdminPin) { loginAttempts = 0; currentRole = 'SUPER_ADMIN'; } 
+                else if (pin === appState.coAdminPin) { loginAttempts = 0; currentRole = 'CO_ADMIN'; } 
+                else { loginAttempts++; if (loginAttempts >= 3) { lockUntil = Date.now() + (5 * 60 * 1000); Swal.fire('บล็อกสิทธิ์ 5 นาที', 'กรอกรหัสผ่านผิดเกินกำหนด', 'error'); } else { Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error'); } return; }
+                
+                // 🔥 ระบบเช็คและขึ้นวันใหม่อัตโนมัติ (Auto-New Day)
+                if (appState.lastActiveDate !== getTodayDateString()) {
+                    appState.students.forEach(s => s.isPaidToday = false);
+                    appState.lastActiveDate = getTodayDateString();
+                    await saveState();
+                    Swal.fire({ icon: 'info', title: 'เช้าวันใหม่!', text: 'ระบบได้รีเซ็ตสถานะปุ่มจ่ายเงินของเพื่อนๆ ทุกคนให้เรียบร้อยแล้ว (ยอดเงินคงเหลือเหมือนเดิม)', timer: 3000 });
+                } else {
+                    Swal.fire({ icon: 'success', title: currentRole === 'SUPER_ADMIN' ? 'สิทธิ์ Super Admin' : 'สิทธิ์ Co-Admin', timer: 1500, showConfirmButton: false });
+                }
                 renderUI();
             }
         }
-        window.logout = function() { currentRole = 'STUDENT'; closeAdminPanel(); renderUI(); Swal.fire({ icon: 'info', title: 'คืนสู่โหมดผู้เข้าชม (Read-Only)', timer: 1500, showConfirmButton: false }); }
+        window.logout = function() { currentRole = 'STUDENT'; closeAdminPanel(); renderUI(); Swal.fire({ icon: 'info', title: 'คืนสู่โหมดผู้ชม', timer: 1000, showConfirmButton: false }); }
 
         window.openQrModal = function() { document.getElementById('qrModal').classList.remove('hidden'); }
         window.closeQrModal = function() { document.getElementById('qrModal').classList.add('hidden'); }
@@ -319,44 +323,28 @@
                 if (filteredLedger.length > 0) { 
                     [...filteredLedger].sort((a,b) => b.ts - a.ts).forEach(h => { 
                         let isOut = h.type.includes('ถอน'); 
+                        let methodTag = h.payMethod ? (h.payMethod === 'CASH' ? ' 💵' : ' 📱') : '';
                         let slipBtn = h.slipImg ? `<button onclick="viewSlipImg('${h.slipImg}')" class="ml-2 text-pBlue underline text-[10px]">ดูสลิป</button>` : '';
-                        historyHtml += `<div class="flex justify-between border-b py-1.5"><div><b>${h.type}</b>${slipBtn}<div class="text-[10px] text-gray-400">${formatDateTime(h.ts)}</div></div><div class="${isOut ? 'text-rose-500' : 'text-pGreen'} font-bold">${isOut ? '-' : '+'}฿${h.amt}</div></div>`; 
+                        historyHtml += `<div class="flex justify-between border-b py-1.5"><div><b>${h.type}${methodTag}</b>${slipBtn}<div class="text-[10px] text-gray-400">${formatDateTime(h.ts)}</div></div><div class="${isOut ? 'text-rose-500' : 'text-pGreen'} font-bold">${isOut ? '-' : '+'}฿${h.amt}</div></div>`; 
                     }); 
                 } else { historyHtml += '<p class="text-center text-slate-400 text-xs py-2">ไม่มีประวัติรายการ Ledger</p>'; }
                 historyHtml += '</div>';
 
-                window.generateReceiptFile = () => {
+                window.generateReceiptFile = () => { /* โค้ดสร้าง e-Slip เหมือนเดิม (ซ่อนไว้เพื่อประหยัดพื้นที่แสดงผลตรงนี้) */
                     const rw = window.open('', '_blank'); const refCode = 'V8-' + Date.now().toString().slice(-8); 
                     rw.document.write(`<html><head><title>e-Slip Ledger</title><style>*{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }body { font-family: sans-serif; background: #f1f5f9; padding: 20px; display: flex; justify-content: center; }.slip { background: #fff; width: 100%; max-width: 360px; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }.header { background: linear-gradient(135deg, #0ea5e9, #a855f7) !important; color: white !important; padding: 25px 20px; text-align: center; }.content { padding: 25px 20px; background: #fff; border-radius: 24px 24px 0 0; margin-top: -20px; position: relative; }.row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px; }.badge { background: #dcfce7 !important; color: #166534 !important; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 700; }.badge.unpaid { background: #ffe4e6 !important; color: #9f1239 !important; }.footer { background: #f8fafc !important; padding: 15px; text-align: center; border-top: 1px dashed #cbd5e1; }.btn-print { margin-top: 20px; padding: 12px 20px; background: #0f172a; color: white; border: none; border-radius: 12px; width: 100%; cursor: pointer; }@media print { .btn-print { display: none !important; } .slip { box-shadow: none; border: 1px solid #cbd5e1; } }</style></head><body><div style="width:100%; max-width:360px; margin:0 auto;"><div class="slip"><div class="header"><h2 style="margin:0">Class Cash Master</h2><p style="margin:0;font-size:11px">Ledger Verification Ticket</p></div><div class="content"><div style="text-align:center;margin-bottom:20px"><div style="font-size:12px;color:#64748b">เงินสะสมส่วนตัวสุทธิ</div><div style="font-size:42px;font-weight:700">฿${s.personalBalance || 0}</div></div><div class="row"><div>ชื่อนักศึกษา</div><div style="font-weight:600">${s.name}</div></div><div class="row"><div>รหัสนักศึกษา</div><div style="font-weight:600">${s.studentCode || '-'}</div></div><div class="row"><div>สถานะค่าห้องวันนี้</div><div><span class="badge ${s.isPaidToday?'':'unpaid'}">${s.isPaidToday?'✅ เรียบร้อยแล้ว':'❌ ค้างจ่ายชำระ'}</span></div></div><div class="row"><div>หนี้สินทบสะสม</div><div style="font-weight:600;color:#e11d48">฿${s.cumulativeDebt || 0}</div></div><div class="row" style="border:none"><div>ตราประทับเวลา</div><div style="font-size:12px">${new Date().toLocaleString('th-TH')}</div></div></div><div class="footer"><div style="font-size:10px;color:#94a3b8">รหัสอ้างอิง: ${refCode}</div></div></div><button class="btn-print" onclick="window.print()">🖨️ บันทึกเอกสารยืนยันสิทธิ์ (PDF)</button></div></body></html>`); rw.document.close();
                 };
 
                 Swal.fire({
-                    title: `โปรไฟล์ความปลอดภัย`,
+                    title: `โปรไฟล์ส่วนตัว`,
                     html: `<div class="grid grid-cols-2 gap-2 bg-slate-100 p-3 rounded-2xl mb-3"><div class="text-center"><p class="text-[10px] font-bold text-slate-500">ยอดเงินคงเหลือ</p><h1 class="text-2xl font-bold text-pBlue">฿${s.personalBalance||0}</h1></div><div class="text-center"><p class="text-[10px] font-bold text-slate-500">หนี้ทบสะสม</p><h1 class="text-2xl font-bold text-rose-500">฿${s.cumulativeDebt||0}</h1></div></div>${historyHtml}<div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openAvatarBuilder(${s.id})" class="py-2.5 bg-indigo-50 text-indigo-600 font-bold rounded-xl border text-xs"><i class="fa-solid fa-face-smile text-base mb-1 block"></i> เปลี่ยนรูปอวตาร์</button><button onclick="generateReceiptFile()" class="py-2.5 bg-slate-800 text-white font-bold rounded-xl text-xs"><i class="fa-solid fa-receipt text-base mb-1 block"></i> ดึง e-Slip ยืนยัน</button></div>`,
                     showConfirmButton: false, showCloseButton: true
                 });
             }
         }
 
-        window.viewSlipImg = function(base64) { Swal.fire({ title: 'รูปภาพหลักฐานสลิป', imageUrl: base64, imageWidth: 260, imageHeight: 260, imageAlt: 'Slip Image', showConfirmButton: false, showCloseButton: true }); }
-
-        window.openAvatarBuilder = async function(id) {
-            const s = appState.students.find(x => x.id === id); Swal.close(); 
-            let curStyle = 'fun-emoji'; let curSeed = s.name + Date.now(); let finalUrl = s.avatar;
-            const { isConfirmed } = await Swal.fire({
-                title: 'สร้างอวตาร์ส่วนตัว',
-                html: `<img id="av-prv" src="${s.avatar}" class="w-24 h-24 mx-auto rounded-full border-4 shadow-lg mb-4 object-cover"><select id="av-st" class="w-full p-2 border rounded-xl mb-2 text-sm"><option value="fun-emoji">😍 อิโมจิ 3D</option><option value="adventurer">🤠 นักผจญภัย</option><option value="bottts">🤖 หุ่นยนต์</option><option value="avataaars">🧑‍🦱 วัยรุ่น</option></select><button id="btn-rnd" class="w-full py-2 bg-amber-100 text-amber-700 font-bold rounded-xl text-xs mb-2">สุ่มหน้าใหม่</button><input type="file" id="av-up" accept="image/*" class="w-full text-xs">`,
-                showCancelButton: true, confirmButtonText: 'บันทึกรูป',
-                didOpen: () => {
-                    const prv = document.getElementById('av-prv'); let isCustom = false;
-                    const upPrv = () => { if(isCustom)return; finalUrl=`https://api.dicebear.com/7.x/${curStyle}/svg?seed=${curSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`; prv.src=finalUrl; };
-                    document.getElementById('av-st').addEventListener('change', (e) => { curStyle = e.target.value; isCustom=false; upPrv(); });
-                    document.getElementById('btn-rnd').addEventListener('click', () => { curSeed = Math.random().toString(36).substring(7); isCustom=false; upPrv(); });
-                    document.getElementById('av-up').addEventListener('change', async (e) => { const file = e.target.files[0]; if(file) { prv.style.opacity='0.4'; try{ finalUrl = await processImageFile(file); prv.src=finalUrl; isCustom=true; }catch(err){} prv.style.opacity='1'; }});
-                }
-            });
-            if (isConfirmed) { s.avatar = finalUrl; await saveState(); Swal.fire({ icon:'success', title:'บันทึกรูปเรียบร้อย', timer:1500, showConfirmButton:false }); }
-        }
+        window.viewSlipImg = function(base64) { Swal.fire({ title: 'รูปภาพสลิป', imageUrl: base64, imageWidth: 260, imageHeight: 260, imageAlt: 'Slip', showConfirmButton: false, showCloseButton: true }); }
+        window.openAvatarBuilder = async function(id) { /* โค้ดเปลี่ยนอวตาร์คงเดิม */ const s = appState.students.find(x => x.id === id); Swal.close(); let curStyle = 'fun-emoji'; let curSeed = s.name + Date.now(); let finalUrl = s.avatar; const { isConfirmed } = await Swal.fire({ title: 'สร้างอวตาร์ส่วนตัว', html: `<img id="av-prv" src="${s.avatar}" class="w-24 h-24 mx-auto rounded-full border-4 shadow-lg mb-4 object-cover"><select id="av-st" class="w-full p-2 border rounded-xl mb-2 text-sm"><option value="fun-emoji">😍 อิโมจิ 3D</option><option value="adventurer">🤠 นักผจญภัย</option><option value="bottts">🤖 หุ่นยนต์</option><option value="avataaars">🧑‍🦱 วัยรุ่น</option></select><button id="btn-rnd" class="w-full py-2 bg-amber-100 text-amber-700 font-bold rounded-xl text-xs mb-2">สุ่มหน้าใหม่</button><input type="file" id="av-up" accept="image/*" class="w-full text-xs">`, showCancelButton: true, confirmButtonText: 'บันทึกรูป', didOpen: () => { const prv = document.getElementById('av-prv'); let isCustom = false; const upPrv = () => { if(isCustom)return; finalUrl=`https://api.dicebear.com/7.x/${curStyle}/svg?seed=${curSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`; prv.src=finalUrl; }; document.getElementById('av-st').addEventListener('change', (e) => { curStyle = e.target.value; isCustom=false; upPrv(); }); document.getElementById('btn-rnd').addEventListener('click', () => { curSeed = Math.random().toString(36).substring(7); isCustom=false; upPrv(); }); document.getElementById('av-up').addEventListener('change', async (e) => { const file = e.target.files[0]; if(file) { prv.style.opacity='0.4'; try{ finalUrl = await processImageFile(file); prv.src=finalUrl; isCustom=true; }catch(err){} prv.style.opacity='1'; }}); } }); if (isConfirmed) { s.avatar = finalUrl; await saveState(); Swal.fire({ icon:'success', title:'บันทึกรูปเรียบร้อย', timer:1500, showConfirmButton:false }); } }
 
         function renderUI() {
             try {
@@ -391,41 +379,51 @@
 
             [...appState.students].sort((a,b) => a.no - b.no).filter(s => s.name.toLowerCase().includes(search) || s.no.toString().includes(search) || (s.studentCode && s.studentCode.toLowerCase().includes(search))).forEach(s => {
                 let dueAmt = 5 + (s.cumulativeDebt || 0);
-                let cm = canEdit ? (s.isPaidToday ? `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-gradient-to-r from-green-400 to-pGreen text-white font-bold rounded-xl text-xs sm:text-sm shadow-md"><i class="fa-solid fa-check-circle"></i> ยืนยันการชำระ (฿${s.lastPaidAmt || dueAmt})</button>` : `<button onclick="toggleClassMoney(${s.id})" class="btn-bouncy w-full py-2 bg-slate-100 text-slate-500 font-bold rounded-xl text-xs sm:text-sm border border-slate-200 hover:bg-slate-200 shadow-sm">บันทึกยอดชำระ (฿${dueAmt})</button>`) : (s.isPaidToday ? `<div class="w-full py-2 bg-green-50 text-pGreen font-bold rounded-xl text-xs sm:text-sm border border-green-200 text-center shadow-inner">ชำระค่าห้องวันนี้แล้ว</div>` : `<div class="w-full py-2 bg-rose-50 text-rose-500 font-bold rounded-xl text-xs sm:text-sm border border-rose-200 text-center shadow-inner">ค้างชำระประจำวัน (฿${dueAmt})</div>`);
                 
-                let inp = canEdit ? `<div class="flex flex-col gap-1 mt-3 pt-3 border-t border-slate-100"><div class="flex gap-1"><input type="number" id="dp_${s.id}" placeholder="ฝากเงิน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs outline-none focus:bg-white"><button onclick="deposit(${s.id})" class="btn-bouncy bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-plus"></i></button></div><div class="flex gap-1 mt-1"><input type="number" id="wt_${s.id}" placeholder="ถอนเงิน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs outline-none focus:bg-white"><button onclick="withdraw(${s.id})" class="btn-bouncy bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-minus"></i></button></div><div class="mt-1.5"><input type="file" id="slip_${s.id}" accept="image/*" class="w-full text-[10px] text-slate-400"></div></div>` : '';
+                // 🔥 ปุ่มชำระแบบแยกเงินสด/โอน
+                let cm = '';
+                if(canEdit) {
+                    if(s.isPaidToday) {
+                        cm = `<button onclick="cancelPayDaily(${s.id})" class="btn-bouncy w-full py-2 bg-gradient-to-r from-green-400 to-pGreen text-white font-bold rounded-xl text-xs sm:text-sm shadow-md"><i class="fa-solid fa-check-circle"></i> ยกเลิกการชำระ (฿${s.lastPaidAmt || dueAmt})</button>`;
+                    } else {
+                        cm = `<div class="flex gap-1 w-full"><button onclick="payDaily(${s.id}, 'CASH')" class="btn-bouncy flex-1 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 font-bold rounded-xl text-xs sm:text-sm border border-emerald-200 shadow-sm">💵 เงินสด (฿${dueAmt})</button><button onclick="payDaily(${s.id}, 'TRANSFER')" class="btn-bouncy flex-1 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-xl text-xs sm:text-sm border border-blue-200 shadow-sm">📱 โอน (฿${dueAmt})</button></div>`;
+                    }
+                } else {
+                    cm = s.isPaidToday ? `<div class="w-full py-2 bg-green-50 text-pGreen font-bold rounded-xl text-xs sm:text-sm border border-green-200 text-center shadow-inner">ชำระค่าห้องวันนี้แล้ว</div>` : `<div class="w-full py-2 bg-rose-50 text-rose-500 font-bold rounded-xl text-xs sm:text-sm border border-rose-200 text-center shadow-inner">ค้างชำระประจำวัน (฿${dueAmt})</div>`;
+                }
+                
+                let inp = canEdit ? `<div class="flex flex-col gap-1 mt-3 pt-3 border-t border-slate-100"><div class="flex gap-1"><select id="dp_method_${s.id}" class="bg-slate-50 border rounded-xl px-1 text-[10px] outline-none"><option value="CASH">💵</option><option value="TRANSFER">📱</option></select><input type="number" id="dp_${s.id}" placeholder="ฝากเงิน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs outline-none focus:bg-white"><button onclick="deposit(${s.id})" class="btn-bouncy bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-plus"></i></button></div><div class="flex gap-1 mt-1"><input type="number" id="wt_${s.id}" placeholder="ถอนเงิน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs outline-none focus:bg-white"><button onclick="withdraw(${s.id})" class="btn-bouncy bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-minus"></i></button></div><div class="mt-1.5"><input type="file" id="slip_${s.id}" accept="image/*" class="w-full text-[10px] text-slate-400"></div></div>` : '';
                 let db = s.cumulativeDebt > 0 ? `<span class="bg-gradient-to-r from-rose-400 to-rose-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm">ค้างสะสม: ฿${s.cumulativeDebt}</span>` : ``;
 
                 grid.innerHTML += `<div class="glass-panel rounded-3xl p-4 card-hover relative overflow-hidden"><div class="flex justify-between mb-2.5"><div class="flex items-center gap-3"><div onclick="viewStudentBalance(${s.id})" class="cursor-pointer hover:scale-105 transition-transform"><img src="${s.avatar}" class="w-12 h-12 rounded-full border-2 border-white object-cover bg-slate-50 shadow-sm"></div><div><div class="text-[9px] font-bold text-pPurple bg-purple-50 px-2 py-0.5 rounded inline-block mb-0.5 border border-purple-100">เลขที่ ${s.no} ${s.studentCode ? `(รหัส: ${s.studentCode})` : ''}</div><h3 class="font-bold text-slate-800 text-xs sm:text-sm truncate w-[110px] sm:w-[140px]">${s.name}</h3></div></div><div class="text-right flex flex-col items-end gap-1">${db}${s.streak>=3?'<span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-bold border border-amber-200">🔥 วินัยออม x'+s.streak+'</span>':''}</div></div>${cm}<div class="mt-2 flex justify-between items-center px-1"><span class="font-bold text-slate-400 text-xs">เงินออมสะสม:</span><span class="text-pBlue text-xl font-display font-bold">${currentRole==='STUDENT'?'฿***':'฿'+(s.personalBalance||0)}</span></div>${inp}</div>`;
             });
         }
 
-        window.toggleClassMoney = async (id) => {
-            const s = appState.students.find(x => x.id === id); 
-            if(s) {
-                s.isPaidToday = !s.isPaidToday; 
-                if(s.isPaidToday) {
-                    s.lastClearedDebt = s.cumulativeDebt || 0; 
-                    s.lastPaidAmt = 5 + s.lastClearedDebt;
-                    s.personalBalance = (s.personalBalance || 0); 
-                    s.cumulativeDebt = 0; 
-                    appState.ledger.push({ id: 'TX-' + Date.now() + '-' + Math.floor(Math.random()*1000), studentId: s.id, studentName: s.name, no: s.no, studentCode: s.studentCode || '', type: 'จ่ายค่าห้องประจำวัน', amt: s.lastPaidAmt, ts: Date.now(), processedBy: currentRole, dateStr: getTodayDateString() });
-                    confetti({particleCount:40, origin:{y:0.85}});
-                } else {
-                    appState.ledger = appState.ledger.filter(l => !(l.studentId === s.id && l.dateStr === getTodayDateString() && l.type === 'จ่ายค่าห้องประจำวัน'));
-                    s.cumulativeDebt = s.lastClearedDebt || 0; s.lastClearedDebt = 0; s.lastPaidAmt = 0;
-                }
+        window.payDaily = async (id, method) => {
+            const s = appState.students.find(x => x.id === id); if(s) {
+                s.isPaidToday = true; s.lastClearedDebt = s.cumulativeDebt || 0; s.lastPaidAmt = 5 + s.lastClearedDebt;
+                s.personalBalance = (s.personalBalance || 0); s.cumulativeDebt = 0; 
+                appState.ledger.push({ id: 'TX-' + Date.now() + '-' + Math.floor(Math.random()*1000), studentId: s.id, studentName: s.name, no: s.no, studentCode: s.studentCode || '', type: 'จ่ายค่าห้องประจำวัน', amt: s.lastPaidAmt, ts: Date.now(), processedBy: currentRole, dateStr: getTodayDateString(), payMethod: method });
+                confetti({particleCount:40, origin:{y:0.85}}); await saveState(); renderUI(); 
+            }
+        }
+        window.cancelPayDaily = async (id) => {
+            const s = appState.students.find(x => x.id === id); if(s) {
+                s.isPaidToday = false;
+                appState.ledger = appState.ledger.filter(l => !(l.studentId === s.id && l.dateStr === getTodayDateString() && l.type === 'จ่ายค่าห้องประจำวัน'));
+                s.cumulativeDebt = s.lastClearedDebt || 0; s.lastClearedDebt = 0; s.lastPaidAmt = 0;
                 await saveState(); renderUI(); 
             }
         }
         
         window.deposit = async(id) => {
             const a = parseInt(document.getElementById(`dp_${id}`).value); if(!a || a<=0) return;
+            const method = document.getElementById(`dp_method_${id}`).value;
             const s = appState.students.find(x=>x.id===id);
             const slipFile = document.getElementById(`slip_${id}`).files[0];
             let base64Slip = null; if(slipFile) { base64Slip = await processImageFile(slipFile); }
             s.personalBalance = (s.personalBalance || 0) + a; s.streak = (s.streak || 0) + 1;
-            appState.ledger.push({ id: 'TX-' + Date.now(), studentId: s.id, studentName: s.name, no: s.no, studentCode: s.studentCode || '', type: 'ฝากเงินส่วนตัว', amt: a, ts: Date.now(), processedBy: currentRole, dateStr: getTodayDateString(), slipImg: base64Slip });
+            appState.ledger.push({ id: 'TX-' + Date.now(), studentId: s.id, studentName: s.name, no: s.no, studentCode: s.studentCode || '', type: 'ฝากเงินส่วนตัว', amt: a, ts: Date.now(), processedBy: currentRole, dateStr: getTodayDateString(), slipImg: base64Slip, payMethod: method });
             document.getElementById(`dp_${id}`).value = ''; document.getElementById(`slip_${id}`).value = '';
             await saveState(); renderUI(); Swal.fire({icon:'success',title:`รับฝากสำเร็จ ฿${a}`,timer:1000,showConfirmButton:false});
         }
@@ -434,7 +432,7 @@
             const a = parseInt(document.getElementById(`wt_${id}`).value); if(!a || a<=0) return;
             const s = appState.students.find(x=>x.id===id); if(a > (s.personalBalance||0)) return Swal.fire('ยอดเงินไม่เพียงพอ','','error');
             s.personalBalance -= a; s.streak = 0;
-            appState.ledger.push({ id: 'TX-' + Date.now(), studentId: s.id, studentName: s.name, no: s.no, studentCode: s.studentCode || '', type: 'ถอนเงินส่วนตัว', amt: a, ts: Date.now(), processedBy: currentRole, dateStr: getTodayDateString() });
+            appState.ledger.push({ id: 'TX-' + Date.now(), studentId: s.id, studentName: s.name, no: s.no, studentCode: s.studentCode || '', type: 'ถอนเงินส่วนตัว', amt: a, ts: Date.now(), processedBy: currentRole, dateStr: getTodayDateString(), payMethod: 'CASH' });
             document.getElementById(`wt_${id}`).value = ''; await saveState(); renderUI(); Swal.fire({icon:'success',title:`บันทึกถอนเงิน ฿${a}`,timer:1000,showConfirmButton:false});
         }
         
@@ -446,9 +444,7 @@
 
         window.openAdminPanel = function() {
             document.getElementById('adminModal').classList.remove('hidden'); const t = getTodayDateString(); const b = document.getElementById('btnLockDay'); 
-            if(appState.dailyLocks && appState.dailyLocks[t]){ b.innerHTML = `<i class="fa-solid fa-unlock text-2xl"></i> ปลดล็อกแก้ไข`; b.className = "btn-bouncy p-4 rounded-2xl bg-gradient-to-tr from-green-500 to-emerald-600 text-white font-bold text-center shadow-md text-xs sm:text-sm"; } 
-            else { b.innerHTML = `<i class="fa-solid fa-lock text-2xl"></i> ล็อกปิดยอด`; b.className = "btn-bouncy p-4 rounded-2xl bg-amber-50 text-amber-700 font-bold border border-amber-200 text-center shadow-sm text-xs sm:text-sm"; } 
-            document.getElementById('superAdminSection').classList.toggle('hidden', currentRole !== 'SUPER_ADMIN'); document.getElementById('btnBroadcast').classList.toggle('hidden', currentRole === 'SUPER_ADMIN'); document.getElementById('btnForceReset').classList.toggle('hidden', currentRole !== 'SUPER_ADMIN');
+            document.getElementById('superAdminSection').classList.toggle('hidden', currentRole !== 'SUPER_ADMIN'); document.getElementById('btnBroadcast').classList.toggle('hidden', currentRole === 'SUPER_ADMIN'); 
             if(currentRole === 'SUPER_ADMIN') rTbl();
         }
         window.closeAdminPanel = function() { document.getElementById('adminModal').classList.add('hidden'); }
@@ -464,76 +460,86 @@
         window.promptChangePin = async function(type){ const{value:p}=await Swal.fire({title:'ระบุรหัสผ่านใหม่ 4 หลัก',input:'password',inputAttributes:{maxlength:4}}); if(p&&p.length===4){if(type==='SUPER')appState.superAdminPin=p;else appState.coAdminPin=p; await saveState(); Swal.fire('เปลี่ยนรหัสความปลอดภัยสำเร็จ','','success');} }
         
         function rTbl(){ const b=document.getElementById('adminStudentTableBody'); b.innerHTML=''; [...appState.students].sort((a,b)=>a.no-b.no).forEach(s=>b.innerHTML+=`<tr class="border-b text-slate-700 text-xs sm:text-sm bg-white hover:bg-slate-50"><td class="px-4 py-2.5 font-bold text-center"><b>${s.no}</b><br><span class="text-[10px] text-gray-500">${s.studentCode||'-'}</span></td><td class="px-4 py-2.5 flex items-center gap-2"><img src="${s.avatar}" class="w-8 h-8 rounded-full border bg-slate-100 object-cover"><span class="truncate w-[90px] sm:w-auto font-medium">${s.name}</span></td><td class="px-4 py-2.5 text-center"><button onclick="edB(${s.id})" class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">แก้เงิน</button><button onclick="edD(${s.id})" class="bg-rose-100 text-rose-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">แก้หนี้</button><button onclick="edS(${s.id})" class="bg-amber-100 text-amber-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">ข้อมูล</button><button onclick="del(${s.id})" class="bg-slate-200 text-slate-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">ลบ</button></td></tr>`); }
-        
         window.edB=async(id)=>{ const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({title:'แก้ไขยอดเงินสะสมส่วนตัว',input:'number',inputValue:s.personalBalance});if(v){s.personalBalance=parseInt(v);appState.ledger.push({id:'MANUAL-'+Date.now(),studentId:s.id,studentName:s.name,type:'SuperAdmin ปรับแก้เงินสะสม',amt:parseInt(v),ts:Date.now(),processedBy:'SUPER_ADMIN',dateStr:getTodayDateString()});await saveState();rTbl();renderUI();}}
         window.edD=async(id)=>{ const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({title:'แก้ไขยอดหนี้ค้างสะสม',input:'number',inputValue:s.cumulativeDebt});if(v){s.cumulativeDebt=parseInt(v);await saveState();rTbl();renderUI();}}
         window.edS=async(id)=>{ const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({html:`<input id="en" value="${s.no}" class="swal2-input" placeholder="เลขที่"><input id="esc" value="${s.studentCode||''}" class="swal2-input" placeholder="รหัส นศ. (ไม่บังคับ)"><input id="enm" value="${s.name}" class="swal2-input" placeholder="ชื่อ-นามสกุล">`,preConfirm:()=>({no:parseInt(document.getElementById('en').value),studentCode:document.getElementById('esc').value,name:document.getElementById('enm').value})});if(v){s.no=v.no;s.studentCode=v.studentCode;s.name=v.name;await saveState();rTbl();renderUI();}}
         window.addNewStudent=async()=>{ const{value:v}=await Swal.fire({html:`<input id="an" placeholder="ระบุเลขที่" class="swal2-input"><input id="asc" placeholder="รหัส นศ. (ไม่บังคับ)" class="swal2-input"><input id="anm" placeholder="ระบุชื่อ-นามสกุล" class="swal2-input">`,preConfirm:()=>({no:parseInt(document.getElementById('an').value),studentCode:document.getElementById('asc').value,name:document.getElementById('anm').value})});if(v&&v.name){appState.students.push({id:Date.now(),no:v.no,studentCode:v.studentCode,name:v.name,avatar:`https://api.dicebear.com/7.x/fun-emoji/svg?seed=${Date.now()}`,isPaidToday:false,personalBalance:0,pin:"0000",history:[],cumulativeDebt:0,streak:0});await saveState();rTbl();renderUI();}}
         window.del=async(id)=>{ Swal.fire({title:'ยืนยันลบนักศึกษา?',icon:'warning',showCancelButton:true}).then(async(r)=>{if(r.isConfirmed){appState.students=appState.students.filter(x=>x.id!==id);await saveState();rTbl();renderUI();}});}
         
-        // ==========================================
-        // 🔥 ระบบนำเข้าไฟล์ CSV (3 คอลัมน์)
-        // ==========================================
         window.importStudentsCSV = function(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = async function(e) {
-                const text = e.target.result; const rows = text.split('\n').filter(row => row.trim().length > 0);
-                let newStudentsCount = 0;
+                const text = e.target.result; const rows = text.split('\n').filter(row => row.trim().length > 0); let newStudentsCount = 0;
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i].split(',');
                     if (cols.length >= 3) {
-                        const no = parseInt(cols[0].trim());
-                        const studentCode = cols[1].trim();
-                        const name = cols[2].trim();
+                        const no = parseInt(cols[0].trim()); const studentCode = cols[1].trim(); const name = cols[2].trim();
                         if (!isNaN(no) && name) {
                             appState.students.push({ id: Date.now() + i, no: no, studentCode: studentCode, name: name, avatar: `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${Date.now()+i}`, isPaidToday: false, personalBalance: 0, pin: "0000", history: [], cumulativeDebt: 0, streak: 0 });
                             newStudentsCount++;
                         }
                     }
                 }
-                await saveState(); rTbl(); renderUI(); Swal.fire('สำเร็จ', `นำเข้ารายชื่อนักศึกษา ปวช./ปวส. จำนวน ${newStudentsCount} คนเรียบร้อยแล้ว`, 'success'); event.target.value = '';
+                await saveState(); rTbl(); renderUI(); Swal.fire('สำเร็จ', `นำเข้ารายชื่อจำนวน ${newStudentsCount} คนเรียบร้อยแล้ว`, 'success'); event.target.value = '';
             }; reader.readAsText(file);
         }
 
         window.exportToExcel = function() {
             let csv = "\uFEFF"; csv += "รายงานระบบบัญชี Ledger ประจำห้องเรียน\nเลขที่,รหัส นศ.,ชื่อ-นามสกุล,เงินฝากออมสะสม (บาท),หนี้สินสะสมคงค้าง (บาท)\n";
             [...appState.students].sort((a,b) => a.no - b.no).forEach(s => csv += `${s.no},${s.studentCode||'-'},${s.name},${s.personalBalance||0},${s.cumulativeDebt||0}\n`);
-            csv += "\n\nประวัติการทำธุรกรรมแยกประเภทห้องเรียน (Ledger Log)\nตราประทับเวลา,เลขที่,รหัส นศ.,ชื่อนักศึกษา,ประเภทธุรกรรม,จำนวนเงิน (บาท),ผู้ตรวจสอบ\n";
-            [...appState.ledger].sort((a,b)=>b.ts-a.ts).forEach(l => csv += `${new Date(l.ts).toLocaleString('th-TH')},${l.no||'-'},${l.studentCode||'-'},${l.studentName||'-'},${l.type},${l.amt},${l.processedBy}\n`);
+            csv += "\n\nประวัติการทำธุรกรรมแยกประเภทห้องเรียน (Ledger Log)\nตราประทับเวลา,เลขที่,รหัส นศ.,ชื่อนักศึกษา,ประเภทธุรกรรม,ช่องทาง,จำนวนเงิน (บาท),ผู้ตรวจสอบ\n";
+            [...appState.ledger].sort((a,b)=>b.ts-a.ts).forEach(l => csv += `${new Date(l.ts).toLocaleString('th-TH')},${l.no||'-'},${l.studentCode||'-'},${l.studentName||'-'},${l.type},${l.payMethod==='CASH'?'เงินสด':'โอน'},${l.amt},${l.processedBy}\n`);
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Ledger_Report_${getTodayDateString()}.csv`; document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
-        window.resetSystem=async()=>{ const{value:v}=await Swal.fire({title:'ยืนยันล้างข้อมูลขึ้นเทอมใหม่',text:'พิมพ์คำว่า "RESET" เพื่อยืนยัน',input:'text'});if(v==='RESET'){appState.students.forEach(s=>{s.isPaidToday=false;s.personalBalance=0;s.cumulativeDebt=0;s.streak=0;s.pin="0000";});appState.dailyLocks={};appState.classExpenses=[];appState.ledger=[];await saveState();closeAdminPanel();renderUI();}}
-        window.resetClassFund = async () => { const { isConfirmed } = await Swal.fire({ title: 'เริ่มต้นนับเงินห้องกองกลางจาก 0 ใหม่หรือไม่?', icon: 'warning', showCancelButton: true }); if (isConfirmed) { appState.classExpenses = []; appState.ledger = appState.ledger.filter(l => l.type !== 'จ่ายค่าห้องประจำวัน'); appState.students.forEach(s => s.isPaidToday = false); await saveState(); renderUI(); closeAdminPanel(); } }
+        window.resetSystem=async()=>{ const{value:v}=await Swal.fire({title:'ยืนยันล้างข้อมูลขึ้นเทอมใหม่',text:'พิมพ์คำว่า "RESET" เพื่อยืนยัน',input:'text'});if(v==='RESET'){appState.students.forEach(s=>{s.isPaidToday=false;s.personalBalance=0;s.cumulativeDebt=0;s.streak=0;s.pin="0000";});appState.dailyLocks={};appState.classExpenses=[];appState.ledger=[];appState.lastActiveDate=getTodayDateString();await saveState();closeAdminPanel();renderUI();}}
 
         window.showDailyReport = function() {
             let dates = new Set(); dates.add(getTodayDateString());
-            appState.ledger.forEach(l => { if(l.dateStr) dates.add(l.dateStr); });
-            appState.classExpenses.forEach(e => { if(e.dateStr) dates.add(e.dateStr); });
+            appState.ledger.forEach(l => { if(l.dateStr) dates.add(l.dateStr); }); appState.classExpenses.forEach(e => { if(e.dateStr) dates.add(e.dateStr); });
             let opts = Array.from(dates).sort().reverse().map(d => `<option value="${d}">${d===getTodayDateString()?'วันนี้ ('+d+')':d}</option>`).join('');
-            Swal.fire({ title: '📊 สรุปรายงาน Ledger สุทธิ', html: `<select id="rpDate" class="w-full p-3 border rounded-xl mb-4 text-center bg-slate-50 font-bold" onchange="updateDailyReportView()">${opts}</select><div id="rpContent" class="text-left text-sm"></div>`, showCloseButton: true, showConfirmButton: false, didOpen: () => updateDailyReportView() });
+            Swal.fire({ title: '📊 สรุปรายงานบัญชีสุทธิ', html: `<select id="rpDate" class="w-full p-3 border rounded-xl mb-4 text-center bg-slate-50 font-bold" onchange="updateDailyReportView()">${opts}</select><div id="rpContent" class="text-left text-sm"></div>`, showCloseButton: true, showConfirmButton: false, didOpen: () => updateDailyReportView() });
         }
+        
+        // 🔥 หน้ารายงานอัปเกรด แยกยอดเงินสดและยอดโอนให้เป๊ะๆ
         window.updateDailyReportView = function() {
-            const sd = document.getElementById('rpDate').value; let dp = 0, wt = 0, exp = 0, cm = 0;
-            appState.ledger.forEach(l => { if(l.dateStr === sd){ if(l.type === 'จ่ายค่าห้องประจำวัน') cm += l.amt; if(l.type === 'ฝากเงินส่วนตัว') dp += l.amt; if(l.type === 'ถอนเงินส่วนตัว') wt += l.amt; } });
-            appState.classExpenses.forEach(e => { if(e.dateStr === sd) exp += e.amt; }); let net = cm - exp;
-            document.getElementById('rpContent').innerHTML = `<div class="bg-slate-100 p-4 rounded-2xl border mb-3"><div class="flex justify-between mb-2"><span>🎯 รับเงินค่าห้องวันนี้:</span><span class="text-pGreen font-bold">+฿${cm}</span></div><div class="flex justify-between mb-2"><span>📉 รายจ่ายห้อง:</span><span class="text-rose-500 font-bold">-฿${exp}</span></div><div class="border-t border-slate-300 pt-3 flex justify-between items-center text-sm mb-3"><span class="font-bold">เงินสดกองกลางสุทธิ:</span><span class="${net>=0?'text-pGreen':'text-rose-500'} font-bold text-lg">฿${net}</span></div><div class="h-px bg-slate-200 my-2"></div><div class="flex justify-between text-xs mb-1"><span>📥 ยอดฝากออม:</span><span class="text-pBlue font-bold">+฿${dp}</span></div><div class="flex justify-between text-xs"><span>📤 ยอดถอนเงินสด:</span><span class="text-amber-600 font-bold">-฿${wt}</span></div></div>`;
+            const sd = document.getElementById('rpDate').value; 
+            let cashIn = 0, transferIn = 0, exp = 0, dpCash = 0, dpTransfer = 0, wt = 0;
+            appState.ledger.forEach(l => { 
+                if(l.dateStr === sd){ 
+                    if(l.type === 'จ่ายค่าห้องประจำวัน') { if(l.payMethod === 'CASH') cashIn += l.amt; else transferIn += l.amt; }
+                    if(l.type === 'ฝากเงินส่วนตัว') { if(l.payMethod === 'CASH') dpCash += l.amt; else dpTransfer += l.amt; }
+                    if(l.type === 'ถอนเงินส่วนตัว') wt += l.amt; // การถอนตีเป็นเงินสดเสมอ
+                } 
+            });
+            appState.classExpenses.forEach(e => { if(e.dateStr === sd) exp += e.amt; }); 
+            let netCash = cashIn + dpCash - exp - wt;
+            
+            document.getElementById('rpContent').innerHTML = `
+            <div class="bg-slate-100 p-4 rounded-2xl border mb-3">
+                <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">สรุปกองกลางห้อง</p>
+                <div class="flex justify-between mb-1"><span>💵 จ่ายค่าห้อง (เงินสด):</span><span class="text-pGreen font-bold">+฿${cashIn}</span></div>
+                <div class="flex justify-between mb-2"><span>📱 จ่ายค่าห้อง (โอนเข้าบัญชี):</span><span class="text-blue-500 font-bold">+฿${transferIn}</span></div>
+                <div class="flex justify-between mb-2"><span>📉 รายจ่ายกองกลาง:</span><span class="text-rose-500 font-bold">-฿${exp}</span></div>
+                
+                <div class="h-px bg-slate-300 my-2"></div>
+                <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">สรุปเงินฝาก/ถอน</p>
+                <div class="flex justify-between mb-1"><span>📥 ฝากออม (เงินสด):</span><span class="text-emerald-600 font-bold">+฿${dpCash}</span></div>
+                <div class="flex justify-between mb-1"><span>📥 ฝากออม (โอนเข้าบัญชี):</span><span class="text-sky-600 font-bold">+฿${dpTransfer}</span></div>
+                <div class="flex justify-between mb-2"><span>📤 ยอดถอนเงินสด:</span><span class="text-amber-600 font-bold">-฿${wt}</span></div>
+                
+                <div class="border-t-2 border-slate-300 pt-3 mt-2 flex justify-between items-center">
+                    <span class="font-bold text-slate-800">เงินสดที่ต้องมีในมือวันนี้:</span>
+                    <span class="${netCash>=0?'text-pGreen':'text-rose-500'} font-bold text-xl">฿${netCash}</span>
+                </div>
+            </div>`;
         }
-
-        window.forceResetNewDay = async () => { const { isConfirmed } = await Swal.fire({ title: 'สลับสเตตัสขึ้นวันใหม่?', icon: 'warning', showCancelButton: true }); if (isConfirmed) { appState.students.forEach(s => s.isPaidToday = false); appState.lastActiveDate = getTodayDateString(); await saveState(); renderUI(); closeAdminPanel(); } }
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `
-                    const CACHE_NAME = 'class-cash-fortress-v8.1';
-                    const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png'];
-                    self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); });
-                    self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); });
-                    self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const blobUrl = URL.createObjectURL(blob);
+                const swCode = `const CACHE_NAME = 'class-cash-v8.2'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });`;
+                const blob = new Blob([swCode], { type: 'application/javascript' }); const blobUrl = URL.createObjectURL(blob);
                 navigator.serviceWorker.register(blobUrl, { scope: './' }).catch(()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
             });
         }
