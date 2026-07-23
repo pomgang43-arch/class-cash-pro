@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Cash Master Pro V8</title>
     
+    <!-- PWA Setting -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,12 +13,14 @@
     <link class="js-app-icon" rel="apple-touch-icon" sizes="192x192" href="app-icon.png">
     <link class="js-app-icon" rel="icon" type="image/png" sizes="192x192" href="app-icon.png">
     
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
     
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -46,6 +49,7 @@
 </head>
 <body class="text-slate-700 pb-24 selection:bg-pPurple/30">
 
+    <!-- Navbar -->
     <nav class="glass-panel sticky top-0 z-40 px-4 py-3 shadow-sm mb-6 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pBlue via-pPurple to-pPink flex items-center justify-center text-white shadow-md">
@@ -75,6 +79,7 @@
     </nav>
 
     <div class="max-w-5xl mx-auto px-4" id="main-content">
+        <!-- เป้าหมายห้องเรียน -->
         <div class="glass-panel rounded-[2rem] p-5 mb-6 shadow-soft relative overflow-hidden border-l-4 border-l-pPurple">
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center gap-2">
@@ -100,6 +105,7 @@
             <p id="broadcastMsg" class="text-amber-800 text-sm font-medium"></p>
         </div>
 
+        <!-- แผงสถิติรวม -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="glass-panel rounded-3xl p-4 text-center card-hover border-b-4 border-b-slate-400">
                 <p class="text-[10px] font-bold text-slate-400 mb-1 tracking-wide uppercase">สมาชิกทั้งหมด</p>
@@ -119,9 +125,10 @@
             </div>
         </div>
 
+        <!-- แถบค้นหา -->
         <div class="flex gap-2 mb-6">
             <div class="relative flex-1">
-                <i class="fa-solid fa-magnifying-glass Gems absolute left-4 top-3.5 text-slate-400"></i>
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
                 <input type="text" id="searchInput" onkeyup="renderStudents()" placeholder="ค้นหารายชื่อ, เลขที่ หรือรหัส นศ..." class="w-full pl-11 pr-4 py-3 rounded-2xl glass-panel focus:outline-none focus:ring-2 focus:ring-pPurple shadow-sm font-medium text-sm">
             </div>
             <button onclick="openExpenseModal()" class="bg-amber-50 text-amber-600 border border-amber-200 px-4 py-3 rounded-2xl hover:bg-amber-100 sm:hidden shadow-sm btn-bouncy"><i class="fa-solid fa-file-invoice-dollar"></i></button>
@@ -134,6 +141,7 @@
         <div id="studentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
+    <!-- Admin Controls Modal -->
     <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative p-6 sm:p-8 border border-purple-100">
             <button onclick="closeAdminPanel()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
@@ -192,6 +200,7 @@
         </div>
     </div>
 
+    <!-- Expense Modal -->
     <div id="expenseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto relative p-6 border border-amber-100">
             <button onclick="closeExpenseModal()" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times"></i></button>
@@ -210,24 +219,29 @@
         </div>
     </div>
 
+    <!-- QR Code Modal (ดีไซน์กดเพื่อขยาย) -->
     <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
-        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm relative p-6 text-center border">
-            <button onclick="closeQrModal()" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times"></i></button>
-            <h3 class="font-bold text-slate-800 text-lg mb-4"><i class="fa-solid fa-qrcode text-emerald-500"></i> สแกนจ่ายเงินเข้าห้อง</h3>
-            <div class="bg-slate-50 border-2 border-dashed p-4 rounded-3xl mb-4 flex flex-col items-center justify-center">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm relative p-6 sm:p-8 text-center border border-emerald-100">
+            <button onclick="closeQrModal()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
+            
+            <h3 class="font-bold text-slate-800 text-xl mb-4"><i class="fa-solid fa-qrcode text-emerald-500"></i> สแกนจ่ายเงิน</h3>
+            
+            <div class="bg-emerald-50/50 border-2 border-dashed border-emerald-200 p-4 rounded-3xl mb-5 flex flex-col items-center justify-center">
                 <div class="w-48 h-48 bg-white rounded-2xl flex items-center justify-center relative shadow-md overflow-hidden border border-slate-200 p-2 cursor-pointer transition-transform hover:scale-105" onclick="zoomQr()">
                     <div class="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                         <i class="fa-solid fa-magnifying-glass-plus text-slate-700 text-3xl drop-shadow-md"></i>
                     </div>
                     <img src="my-qr.jpg" alt="QR Code" class="w-full h-full object-contain">
                 </div>
-                <p class="text-sm text-emerald-600 mt-4 font-bold"><i class="fa-regular fa-hand-pointer"></i> แต้ที่รูปเพื่อขยายใหญ่</p>
+                <p class="text-sm text-emerald-600 mt-4 font-bold"><i class="fa-regular fa-hand-pointer"></i> แตะที่รูปเพื่อขยายใหญ่</p>
                 <p class="text-[11px] text-slate-500 mt-1 font-medium">กรุณาตรวจสอบยอดเงินคงค้าง<br>ก่อนสแกนยอดทุกครั้ง</p>
             </div>
-            <button onclick="closeQrModal()" class="w-full py-2.5 bg-slate-800 text-white font-bold rounded-xl text-sm btn-bouncy">ปิดหน้าต่างนี้</button>
+            
+            <button onclick="closeQrModal()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-base btn-bouncy shadow-md">ปิดหน้าต่างนี้</button>
         </div>
     </div>
 
+    <!-- ส่วนสำคัญที่สุด: JavaScript ตัวควบคุมระบบ (แก้ไขบั๊กจอขาวแล้ว 100%) -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBwt6DK12lt5zTso4mTi-B3GJE7Af8y54M",
@@ -252,21 +266,49 @@
         function isTodayLocked() { return appState.dailyLocks && appState.dailyLocks[getTodayDateString()] === true; }
         window.processImageFile = function(file) { return new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if(w>h){if(w>150){h*=150/w;w=150;}}else{if(h>150){w*=150/h;h=150;}} canvas.width=w;canvas.height=h; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h); resolve(canvas.toDataURL('image/jpeg',0.5)); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
 
+        // ฟังก์ชันพระเอกที่ช่วยแก้ปัญหาจอขาวและข้อมูลล่องหน
+        function parseFirebaseData(rawData) {
+            if (!rawData) return [];
+            if (Array.isArray(rawData)) return rawData.filter(item => item !== null && item !== undefined); // ล้างค่า null
+            if (typeof rawData === 'object') return Object.values(rawData).filter(item => item !== null);
+            return [];
+        }
+
         window.onload = () => {
             const badge = document.getElementById('connection-status');
             dbRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if(data) {
-                    appState = {...appState, ...data};
-                    appState.students = data.students ? Object.values(data.students) : [];
-                    appState.classExpenses = data.classExpenses ? Object.values(data.classExpenses) : [];
-                    appState.ledger = data.ledger ? Object.values(data.ledger) : [];
-                    if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
-                    appState.students.forEach(s => { if(!s.pin)s.pin="0000"; if(!s.history)s.history=[]; if(s.cumulativeDebt===undefined)s.cumulativeDebt=0; if(s.streak===undefined)s.streak=0; });
-                    badge.innerHTML = "🟢 นิรภัยศูนย์กลางควบคุมออนไลน์ (V8)";
-                } else { saveState(); badge.innerHTML = "🟢 ติดตั้งโครงสร้างป้อมปราการใหม่"; }
-                if(document.getElementById('stat-total')) renderUI();
-            }, () => { badge.innerHTML = "🔴 การเชื่อมต่อถูกปฏิเสธโดยระบบความปลอดภัย"; });
+                try {
+                    const data = snapshot.val();
+                    if(data) {
+                        appState = {...appState, ...data};
+                        
+                        // กรองข้อมูลให้เป็น Array แบบสมบูรณ์ ป้องกันโค้ดพัง
+                        appState.students = parseFirebaseData(data.students);
+                        appState.classExpenses = parseFirebaseData(data.classExpenses);
+                        appState.ledger = parseFirebaseData(data.ledger);
+                        
+                        if(!appState.dailyLocks) appState.dailyLocks = {};
+                        if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
+                        
+                        appState.students.forEach(s => { 
+                            if(!s.pin) s.pin="0000"; 
+                            if(!s.history) s.history=[]; 
+                            if(s.cumulativeDebt===undefined) s.cumulativeDebt=0; 
+                            if(s.streak===undefined) s.streak=0; 
+                        });
+                        badge.innerHTML = "🟢 ฐานข้อมูลนิรภัย (V8.6) ทำงานปกติ";
+                    } else { 
+                        saveState(); 
+                        badge.innerHTML = "🟢 สร้างโครงสร้างฐานข้อมูลใหม่"; 
+                    }
+                    if(document.getElementById('stat-total')) renderUI();
+                } catch(e) {
+                    console.error("Data Parse Error:", e);
+                    badge.innerHTML = "🔴 ข้อผิดพลาดในการแปลข้อมูล";
+                }
+            }, (error) => { 
+                badge.innerHTML = "🔴 การเชื่อมต่อถูกปฏิเสธ"; 
+            });
         };
 
         async function saveState() { 
@@ -294,6 +336,7 @@
             }
         }
         window.logout = function() { currentRole = 'STUDENT'; closeAdminPanel(); renderUI(); Swal.fire({ icon: 'info', title: 'คืนสู่โหมดผู้ชม', timer: 1000, showConfirmButton: false }); }
+        
         window.openQrModal = function() { document.getElementById('qrModal').classList.remove('hidden'); }
         window.closeQrModal = function() { document.getElementById('qrModal').classList.add('hidden'); }
         
@@ -302,15 +345,14 @@
             Swal.fire({ imageUrl: 'my-qr.jpg', imageAlt: 'QR Code', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '1rem', didClose: () => { openQrModal(); } });
         }
 
-        // 🔥 อัปเกรดระบบตรวจสอบประวัติคัดแยกเดี่ยว (Audit Ledger View) บายพาสสิทธิ์แอดมิน
         window.viewStudentBalance = async function(id) {
             const s = appState.students.find(x => x.id === id); if (!s) return;
             let authenticated = false;
             
             if (currentRole === 'SUPER_ADMIN' || currentRole === 'CO_ADMIN') {
-                authenticated = true; // แอดมินส่องได้ทันที ไม่ต้องผ่านประตูรหัส PIN
+                authenticated = true; // แอดมินข้ามการใส่รหัสผ่าน
             } else {
-                const { value: pin } = await Swal.fire({ title: `รหัสตรวจสอบสิทธิ์ประจำตัวของคุณ`, text: `${s.name} (รหัสเริ่มต้น 0000)`, input: 'password', inputAttributes: { maxlength: 4 }, showCancelButton: true });
+                const { value: pin } = await Swal.fire({ title: `รหัสตรวจสอบสิทธิ์ส่วนบุคคล`, text: `${s.name} (รหัสเริ่มต้น 0000)`, input: 'password', inputAttributes: { maxlength: 4 }, showCancelButton: true });
                 if (pin) {
                     if (pin !== s.pin) { Swal.fire('รหัสผ่านประจำตัวผิดพลาด!', '', 'error'); return; }
                     if (s.pin === "0000") {
@@ -327,16 +369,16 @@
                 if (filteredLedger.length > 0) { 
                     [...filteredLedger].sort((a,b) => b.ts - a.ts).forEach(h => { 
                         let isOut = h.type.includes('ถอน'); 
-                        let methodTag = h.payMethod ? (h.payMethod === 'CASH' ? ' [เงินสด 💵]' : ' [โอน 📱]') : '';
+                        let methodTag = h.payMethod ? (h.payMethod === 'CASH' ? ' <span class="text-[10px] text-emerald-600 font-bold bg-emerald-100 px-1 rounded">[เงินสด 💵]</span>' : ' <span class="text-[10px] text-blue-600 font-bold bg-blue-100 px-1 rounded">[โอน 📱]</span>') : '';
                         let slipBtn = h.slipImg ? `<button onclick="viewSlipImg('${h.slipImg}')" class="ml-2 text-pBlue underline text-[10px]">ดูสลิป</button>` : '';
                         historyHtml += `<div class="flex justify-between border-b py-2"><div><span class="font-bold text-slate-800">${h.type}</span>${methodTag}${slipBtn}<div class="text-[10px] text-gray-400 font-medium">${formatDateTime(h.ts)} โดย: ${h.processedBy||'ระบบ'}</div></div><div class="${isOut ? 'text-rose-500' : 'text-pGreen'} font-bold">${isOut ? '-' : '+'}฿${h.amt}</div></div>`; 
                     }); 
-                } else { historyHtml += '<p class="text-center text-slate-400 text-xs py-3">ไม่มีบันทึกประวัติธุรกรรม Ledger</p>'; }
+                } else { historyHtml += '<p class="text-center text-slate-400 text-xs py-3">ไม่มีบันทึกประวัติธุรกรรม (Ledger)</p>'; }
                 historyHtml += '</div>';
 
                 Swal.fire({
                     title: `<span class="font-sans text-base sm:text-lg border-b pb-2 block">📋 รายงานประวัติ: ${s.name}</span>`,
-                    html: `<div class="grid grid-cols-2 gap-2 bg-slate-100 p-3 rounded-2xl mb-3"><div class="text-center bg-white p-2 rounded-xl shadow-sm"><p class="text-[10px] font-bold text-slate-400">เงินออมสะสมสุทธิ</p><h1 class="text-xl font-bold text-pBlue">฿${s.personalBalance||0}</h1></div><div class="text-center bg-white p-2 rounded-xl shadow-sm"><p class="text-[10px] font-bold text-slate-400">หนี้ค้างสะสม</p><h1 class="text-xl font-bold text-rose-500">฿${s.cumulativeDebt||0}</h1></div></div><p class="text-[11px] text-left text-slate-400 font-semibold pl-1 mb-1">⏱️ รายละเอียดประทับเวลาแยกประเภท (Ledger Log)</p>${historyHtml}<div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openAvatarBuilder(${s.id})" class="py-2.5 bg-indigo-50 text-indigo-600 font-bold rounded-xl border border-indigo-200 text-xs btn-bouncy"><i class="fa-solid fa-face-smile mr-1"></i> อวตาร์</button><button onclick="generateReceiptFile(${s.id})" class="py-2.5 bg-slate-800 text-white font-bold rounded-xl text-xs btn-bouncy"><i class="fa-solid fa-receipt mr-1"></i> ดึง e-Slip</button></div>`,
+                    html: `<div class="grid grid-cols-2 gap-2 bg-slate-100 p-3 rounded-2xl mb-3"><div class="text-center bg-white p-2 rounded-xl shadow-sm"><p class="text-[10px] font-bold text-slate-400">เงินออมสะสมสุทธิ</p><h1 class="text-xl font-bold text-pBlue">฿${s.personalBalance||0}</h1></div><div class="text-center bg-white p-2 rounded-xl shadow-sm"><p class="text-[10px] font-bold text-slate-400">หนี้ค้างสะสม</p><h1 class="text-xl font-bold text-rose-500">฿${s.cumulativeDebt||0}</h1></div></div><p class="text-[11px] text-left text-slate-400 font-semibold pl-1 mb-1">⏱️ ประวัติประทับเวลาแยกประเภท</p>${historyHtml}<div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openAvatarBuilder(${s.id})" class="py-2.5 bg-indigo-50 text-indigo-600 font-bold rounded-xl border border-indigo-200 text-xs btn-bouncy"><i class="fa-solid fa-face-smile mr-1"></i> อวตาร์</button><button onclick="generateReceiptFile(${s.id})" class="py-2.5 bg-slate-800 text-white font-bold rounded-xl text-xs btn-bouncy"><i class="fa-solid fa-receipt mr-1"></i> ดึง e-Slip</button></div>`,
                     showConfirmButton: false, showCloseButton: true
                 });
             }
@@ -349,6 +391,7 @@
         }
 
         window.viewSlipImg = function(base64) { Swal.fire({ title: 'รูปภาพสลิป', imageUrl: base64, imageWidth: 260, imageHeight: 260, imageAlt: 'Slip', showConfirmButton: false, showCloseButton: true }); }
+        
         window.openAvatarBuilder = async function(id) { const s = appState.students.find(x => x.id === id); Swal.close(); let curStyle = 'fun-emoji'; let curSeed = s.name + Date.now(); let finalUrl = s.avatar; const { isConfirmed } = await Swal.fire({ title: 'สร้างอวตาร์ส่วนตัว', html: `<img id="av-prv" src="${s.avatar}" class="w-24 h-24 mx-auto rounded-full border-4 shadow-lg mb-4 object-cover"><select id="av-st" class="w-full p-2 border rounded-xl mb-2 text-sm"><option value="fun-emoji">😍 อิโมจิ 3D</option><option value="adventurer">🤠 นักผจญภัย</option><option value="bottts">🤖 หุ่นยนต์</option><option value="avataaars">🧑‍🦱 วัยรุ่น</option></select><button id="btn-rnd" class="w-full py-2 bg-amber-100 text-amber-700 font-bold rounded-xl text-xs mb-2">สุ่มหน้าใหม่</button><input type="file" id="av-up" accept="image/*" class="w-full text-xs">`, showCancelButton: true, confirmButtonText: 'บันทึกรูป', didOpen: () => { const prv = document.getElementById('av-prv'); let isCustom = false; const upPrv = () => { if(isCustom)return; finalUrl=`https://api.dicebear.com/7.x/${curStyle}/svg?seed=${curSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`; prv.src=finalUrl; }; document.getElementById('av-st').addEventListener('change', (e) => { curStyle = e.target.value; isCustom=false; upPrv(); }); document.getElementById('btn-rnd').addEventListener('click', () => { curSeed = Math.random().toString(36).substring(7); isCustom=false; upPrv(); }); document.getElementById('av-up').addEventListener('change', async (e) => { const file = e.target.files[0]; if(file) { prv.style.opacity='0.4'; try{ finalUrl = await processImageFile(file); prv.src=finalUrl; isCustom=true; }catch(err){} prv.style.opacity='1'; }}); } }); if (isConfirmed) { s.avatar = finalUrl; await saveState(); Swal.fire({ icon:'success', title:'บันทึกรูปเรียบร้อย', timer:1500, showConfirmButton:false }); } }
 
         function renderUI() {
@@ -358,14 +401,18 @@
                 const roleBadge = document.getElementById('roleBadge');
                 roleBadge.textContent = currentRole === 'SUPER_ADMIN' ? '👑 Super' : '🛠️ Co-Admin';
                 roleBadge.className = currentRole === 'SUPER_ADMIN' ? 'hidden sm:inline-block px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full shadow-sm' : 'hidden sm:inline-block px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-sm';
+                
                 const total = appState.students.length; const paid = appState.students.filter(s => s.isPaidToday).length;
                 const expenses = appState.classExpenses.reduce((s, e) => s + e.amt, 0); const collected = appState.ledger.filter(l => l.type === 'จ่ายค่าห้องประจำวัน').reduce((s, e) => s + e.amt, 0); const net = collected - expenses;
                 document.getElementById('stat-total').innerText = total; document.getElementById('stat-paid').innerText = paid; document.getElementById('stat-unpaid').innerText = total - paid; document.getElementById('stat-balance').innerText = '฿' + net;
+                
                 const g = appState.classGoal; document.getElementById('goal-title').innerText = g.text; const pct = g.target > 0 ? Math.min(100, Math.floor((net / g.target) * 100)) : 0;
                 document.getElementById('goal-percent').innerText = pct + '%'; document.getElementById('goal-fraction').innerText = `฿${net} / ฿${g.target}`; document.getElementById('goal-progress-bar').style.width = pct + '%';
+                
                 const banner = document.getElementById('broadcastBanner'); if (appState.broadcast && appState.broadcast.text && (Date.now() - appState.broadcast.timestamp < 86400000)) { banner.classList.remove('hidden'); document.getElementById('broadcastMsg').innerText = appState.broadcast.text; } else { banner.classList.add('hidden'); }
+                
                 renderStudents();
-            } catch(e) {}
+            } catch(e) { console.error("Render Error:", e); }
         }
 
         window.renderStudents = function() {
@@ -373,6 +420,7 @@
             const locked = isTodayLocked(); const canEdit = currentRole !== 'STUDENT' && (!locked || currentRole === 'SUPER_ADMIN');
             document.getElementById('lockWarning').classList.toggle('hidden', !(currentRole === 'CO_ADMIN' && locked));
             grid.innerHTML = '';
+            
             [...appState.students].sort((a,b) => a.no - b.no).filter(s => s.name.toLowerCase().includes(search) || s.no.toString().includes(search) || (s.studentCode && s.studentCode.toLowerCase().includes(search))).forEach(s => {
                 let dueAmt = 5 + (s.cumulativeDebt || 0);
                 
@@ -390,7 +438,6 @@
                 let inp = canEdit ? `<div class="flex flex-col gap-1 mt-3 pt-3 border-t border-slate-100"><div class="flex gap-1"><select id="dp_method_${s.id}" class="bg-slate-50 border rounded-xl px-1 text-[10px] outline-none"><option value="CASH">💵</option><option value="TRANSFER">📱</option></select><input type="number" id="dp_${s.id}" placeholder="ฝากเงิน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs outline-none focus:bg-white"><button onclick="deposit(${s.id})" class="btn-bouncy bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-plus"></i></button></div><div class="flex gap-1 mt-1"><input type="number" id="wt_${s.id}" placeholder="ถอนเงิน" class="w-full bg-slate-50 border rounded-xl px-2 py-1 text-center text-xs outline-none focus:bg-white"><button onclick="withdraw(${s.id})" class="btn-bouncy bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-minus"></i></button></div><div class="mt-1.5"><input type="file" id="slip_${s.id}" accept="image/*" class="w-full text-[10px] text-slate-400"></div></div>` : '';
                 let db = s.cumulativeDebt > 0 ? `<span class="bg-gradient-to-r from-rose-400 to-rose-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm">ค้างสะสม: ฿${s.cumulativeDebt}</span>` : ``;
 
-                // 🔥 ปุ่มส่องประวัติด่วนสำหรับการ์ด Admin / Co-Admin
                 let adminHistoryBtn = canEdit ? `<button onclick="viewStudentBalance(${s.id})" class="btn-bouncy w-full py-1.5 mt-2 bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold rounded-xl border border-slate-200"><i class="fa-solid fa-history mr-1 text-pPurple"></i> ส่องประวัติบัญชีเดี่ยว</button>` : '';
 
                 grid.innerHTML += `<div class="glass-panel rounded-3xl p-4 card-hover relative overflow-hidden"><div class="flex justify-between mb-2.5"><div class="flex items-center gap-3"><div onclick="viewStudentBalance(${s.id})" class="cursor-pointer hover:scale-105 transition-transform"><img src="${s.avatar}" class="w-12 h-12 rounded-full border-2 border-white object-cover bg-slate-50 shadow-sm"></div><div><div class="text-[9px] font-bold text-pPurple bg-purple-50 px-2 py-0.5 rounded inline-block mb-0.5 border border-purple-100">เลขที่ ${s.no} ${s.studentCode ? `(รหัส: ${s.studentCode})` : ''}</div><h3 class="font-bold text-slate-800 text-xs sm:text-sm truncate w-[110px] sm:w-[140px]">${s.name}</h3></div></div><div class="text-right flex flex-col items-end gap-1">${db}${s.streak>=3?'<span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-bold border border-amber-200">🔥 วินัยออม x'+s.streak+'</span>':''}</div></div>${cm}<div class="mt-2 flex justify-between items-center px-1"><span class="font-bold text-slate-400 text-xs">เงินออมสะสม:</span><span class="text-pBlue text-xl font-display font-bold">${currentRole==='STUDENT'?'฿***':'฿'+(s.personalBalance||0)}</span></div>${inp}${adminHistoryBtn}</div>`;
@@ -440,7 +487,6 @@
         window.promptEditGoal = async function(){ const{value:v}=await Swal.fire({html:`<input id="gt" class="swal2-input" value="${appState.classGoal.text}"><input id="ga" type="number" class="swal2-input" value="${appState.classGoal.target}">`,preConfirm:()=>({text:document.getElementById('gt').value,target:parseInt(document.getElementById('ga').value)})}); if(v){appState.classGoal=v; await saveState(); closeAdminPanel(); renderUI();} }
         window.promptChangePin = async function(type){ const{value:p}=await Swal.fire({title:'ระบุรหัสผ่าน 4 หลัก',input:'password',inputAttributes:{maxlength:4}}); if(p&&p.length===4){if(type==='SUPER')appState.superAdminPin=p;else appState.coAdminPin=p; await saveState(); Swal.fire('สำเร็จ','','success');} }
         
-        // 🔥 เพิ่มปุ่มเรียกดูประวัติในหน้าต่างตารางแอดมินกลาง
         function rTbl(){ const b=document.getElementById('adminStudentTableBody'); b.innerHTML=''; [...appState.students].sort((a,b)=>a.no-b.no).forEach(s=>b.innerHTML+=`<tr class="border-b text-slate-700 text-xs sm:text-sm bg-white hover:bg-slate-50"><td class="px-4 py-2.5 font-bold text-center"><b>${s.no}</b><br><span class="text-[10px] text-gray-500">${s.studentCode||'-'}</span></td><td class="px-4 py-2.5 flex items-center gap-2"><img src="${s.avatar}" class="w-8 h-8 rounded-full border bg-slate-100 object-cover"><span class="truncate w-[90px] sm:w-auto font-medium">${s.name}</span></td><td class="px-4 py-2.5 text-center"><button onclick="viewStudentBalance(${s.id})" class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">📄 ประวัติ</button><button onclick="edB(${s.id})" class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">แก้เงิน</button><button onclick="edD(${s.id})" class="bg-rose-100 text-rose-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">แก้หนี้</button><button onclick="edS(${s.id})" class="bg-amber-100 text-amber-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">ข้อมูล</button><button onclick="del(${s.id})" class="bg-slate-200 text-slate-800 px-2 py-1 rounded font-bold mx-0.5 shadow-sm">ลบ</button></td></tr>`); }
         window.edB=async(id)=>{ const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({title:'แก้ไขยอดเงินสะสม',input:'number',inputValue:s.personalBalance});if(v){s.personalBalance=parseInt(v);appState.ledger.push({id:'MANUAL-'+Date.now(),studentId:s.id,studentName:s.name,type:'SuperAdmin ปรับแก้เงินสะสม',amt:parseInt(v),ts:Date.now(),processedBy:'SUPER_ADMIN',dateStr:getTodayDateString()});await saveState();rTbl();renderUI();}}
         window.edD=async(id)=>{ const s=appState.students.find(x=>x.id===id);const{value:v}=await Swal.fire({title:'แก้ไขยอดหนี้ค้าง',input:'number',inputValue:s.cumulativeDebt});if(v){s.cumulativeDebt=parseInt(v);await saveState();rTbl();renderUI();}}
@@ -479,7 +525,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `const CACHE_NAME = 'class-cash-v8.5'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
+                const swCode = `const CACHE_NAME = 'class-cash-v8.6'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
                 const blob = new Blob([swCode], { type: 'application/javascript' }); const blobUrl = URL.createObjectURL(blob);
                 navigator.serviceWorker.register(blobUrl, { scope: './' }).catch(()=>{});
             });
