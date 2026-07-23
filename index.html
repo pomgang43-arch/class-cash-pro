@@ -262,7 +262,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const dbRef = database.ref('classCashStateV8'); 
+        const dbRef = database.ref('classCashState'); 
 
         let appState = { students: [], dailyLocks: {}, superAdminPin: "2499", coAdminPin: "5678", broadcast: null, classExpenses: [], classGoal: { text: "เป้าหมายเงินกองกลางห้องเรียน", target: 3000 }, ledger: [], lastActiveDate: "" };
         let currentRole = 'STUDENT'; let loginAttempts = 0; let lockUntil = 0;
