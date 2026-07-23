@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Cash Master Pro V8</title>
+    <title>Class Cash Master Pro V8.8</title>
     
     <!-- PWA Setting -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -53,11 +53,11 @@
     <nav class="glass-panel sticky top-0 z-40 px-4 py-3 shadow-sm mb-6 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pBlue via-pPurple to-pPink flex items-center justify-center text-white shadow-md">
-                <i class="fa-solid fa-building-columns text-xl"></i>
+                <i class="fa-solid fa-shield-halved text-xl"></i>
             </div>
             <div>
-                <h1 class="font-display font-bold text-2xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-pPurple">Class Cash V8</h1>
-                <p class="text-[10px] sm:text-xs text-slate-500 font-medium" id="connection-status">🟡 กำลังเชื่อมต่อระบบนิรภัย...</p>
+                <h1 class="font-display font-bold text-2xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-pPurple">Class Cash V8.8</h1>
+                <p class="text-[10px] sm:text-xs text-slate-500 font-medium transition-colors" id="connection-status">🟡 กำลังเชื่อมต่อระบบนิรภัย...</p>
             </div>
         </div>
         <div class="flex items-center gap-2">
@@ -79,11 +79,11 @@
     </nav>
 
     <div class="max-w-5xl mx-auto px-4" id="main-content">
-        <!-- แจ้งเตือนการกู้คืนระบบ -->
-        <div id="recoveryAlert" class="hidden mb-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl p-4 shadow-lg text-white text-center animate-pulse">
-            <i class="fa-solid fa-wand-magic-sparkles text-2xl mb-2"></i>
-            <h3 class="font-bold text-base">ระบบกำลังกู้คืนข้อมูลโครงสร้าง...</h3>
-            <p class="text-xs font-medium opacity-90">ไม่ต้องตกใจครับ แอปกำลังย้ายข้อมูลเข้าตู้เซฟให้ถูกต้อง กรุณารอสักครู่!</p>
+        <!-- แจ้งเตือนฉุกเฉิน (จะแสดงเมื่อระบบล็อกการเซฟ) -->
+        <div id="systemLockAlert" class="hidden mb-6 bg-gradient-to-r from-rose-500 to-red-600 rounded-3xl p-4 shadow-lg text-white text-center">
+            <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+            <h3 class="font-bold text-base">ระบบล็อกการบันทึกอัตโนมัติ (Safety Lock)</h3>
+            <p class="text-xs font-medium opacity-90 mt-1">ตรวจพบความผิดปกติในการโหลดข้อมูล ระบบได้ตัดวงจรการบันทึกทับเพื่อปกป้องข้อมูลเก่าของคุณ<br>คุณสามารถดูข้อมูลได้ แต่การแก้ไขจะไม่ถูกบันทึกลงเซิร์ฟเวอร์จนกว่าปัญหาจะถูกแก้ไข</p>
         </div>
 
         <!-- เป้าหมายห้องเรียน -->
@@ -154,6 +154,17 @@
             <button onclick="closeAdminPanel()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
             <h2 class="font-display text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-pPurple"></i> ศูนย์ควบคุมนิรภัยกลาง</h2>
             
+            <!-- 🛡️ ป้ายเตือนโหลด Excel (Offline Backup) -->
+            <div id="excelReminderBanner" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-2xl mb-6 flex items-start gap-3 shadow-inner relative overflow-hidden">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-rose-500 opacity-10 rounded-bl-full -z-0"></div>
+                <i class="fa-solid fa-hard-drive text-rose-500 text-2xl mt-1 z-10"></i>
+                <div class="z-10">
+                    <h4 class="text-rose-800 font-bold text-sm sm:text-base">⚠️ มาตรการป้องกันข้อมูลสูญหาย 100%</h4>
+                    <p class="text-xs sm:text-sm text-rose-600 mt-1 mb-2 font-medium">เพื่อความปลอดภัยสูงสุด กรุณากดโหลดไฟล์ Excel เก็บไว้ในคอมพิวเตอร์ของคุณเป็นประจำทุกสัปดาห์</p>
+                    <button onclick="exportToExcel()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-1.5 px-4 rounded-xl text-xs shadow-md btn-bouncy"><i class="fa-solid fa-file-excel mr-1"></i> โหลด Excel สำรองเดี๋ยวนี้</button>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <button onclick="toggleDailyLock()" id="btnLockDay" class="btn-bouncy p-4 rounded-2xl bg-amber-50 text-amber-700 font-bold border border-amber-200 flex flex-col items-center justify-center gap-2 text-xs sm:text-sm text-center shadow-sm">
                     <i class="fa-solid fa-lock text-2xl"></i> ปิดยอดวันนี้
@@ -226,7 +237,7 @@
         </div>
     </div>
 
-    <!-- QR Code Modal -->
+    <!-- QR Code Modal (ดีไซน์กดเพื่อขยาย) -->
     <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm relative p-6 sm:p-8 text-center border border-emerald-100">
             <button onclick="closeQrModal()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
@@ -248,7 +259,7 @@
         </div>
     </div>
 
-    <!-- JavaScript (V8.7 Recovery Edition) -->
+    <!-- JavaScript (V8.8 Ironclad Edition) -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBwt6DK12lt5zTso4mTi-B3GJE7Af8y54M",
@@ -262,10 +273,16 @@
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        
+        // 🛡️ ป้องกัน 2 ชั้น: ดึงข้อมูลจากแฟ้มหลัก และแอบสำรองข้อมูลลงแฟ้ม Backup ทุกครั้ง
         const dbRef = database.ref('classCashStateV8'); 
+        const dbBackupRef = database.ref('classCashStateV8_Backup'); 
 
         let appState = { students: [], dailyLocks: {}, superAdminPin: "2499", coAdminPin: "5678", broadcast: null, classExpenses: [], classGoal: { text: "เป้าหมายเงินกองกลางห้องเรียน", target: 3000 }, ledger: [], lastActiveDate: "" };
         let currentRole = 'STUDENT'; let loginAttempts = 0; let lockUntil = 0;
+        
+        // 🛡️ Safety Lock Flag: ตัวแปรล็อกการเซฟทับ หากเกิดข้อผิดพลาดตอนโหลด
+        let isSystemLockedDueToError = false; 
 
         function formatDateTime(ms) { const d = new Date(ms); return d.toLocaleDateString('th-TH', {day:'2-digit', month:'short'}) + ' ' + d.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}); }
         function getCleanDateString(ms) { const d = ms ? new Date(ms) : new Date(); return d.getDate() + '-' + (d.getMonth() + 1) + '-' + (d.getFullYear() + 543); }
@@ -273,48 +290,36 @@
         function isTodayLocked() { return appState.dailyLocks && appState.dailyLocks[getTodayDateString()] === true; }
         window.processImageFile = function(file) { return new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if(w>h){if(w>150){h*=150/w;w=150;}}else{if(h>150){w*=150/h;h=150;}} canvas.width=w;canvas.height=h; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h); resolve(canvas.toDataURL('image/jpeg',0.5)); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
 
+        function parseFirebaseData(rawData) {
+            if (!rawData) return [];
+            if (Array.isArray(rawData)) return rawData.filter(item => item !== null && item !== undefined); 
+            if (typeof rawData === 'object') return Object.values(rawData).filter(item => item !== null);
+            return [];
+        }
+
         window.onload = () => {
             const badge = document.getElementById('connection-status');
-            dbRef.on('value', async (snapshot) => {
+            dbRef.on('value', (snapshot) => {
                 try {
                     const data = snapshot.val();
                     if(data) {
+                        // ป้องกันกรณีโครงสร้างนักเรียนว่างเปล่า แต่เคยมีข้อมูล
+                        let parsedStudents = parseFirebaseData(data.students);
                         
-                        // 🔥 ระบบกู้ภัยอัตโนมัติ (Auto-Recovery)
-                        // ตรวจสอบว่าข้อมูลไหลมากองข้างนอกโดยไม่มีโฟลเดอร์ students หรือไม่
-                        if (!data.students && (data["0"] || data["1"] || (Object.keys(data).length > 0 && typeof data[Object.keys(data)[0]] === 'object' && data[Object.keys(data)[0]].name))) {
-                            
-                            document.getElementById('recoveryAlert').classList.remove('hidden');
-                            console.warn("ตรวจพบโครงสร้างข้อมูลผิดปกติ กำลังดำเนินการกู้คืน...");
-                            
-                            // ดูดข้อมูลทั้งหมดมาจัดลงกล่อง students
-                            let recoveredStudents = Object.values(data).filter(item => typeof item === 'object' && item.name);
-                            
-                            // จัดเรียงกลับเข้าสู่โครงสร้างที่ถูกต้อง
-                            appState.students = recoveredStudents;
-                            appState.classExpenses = [];
-                            appState.ledger = [];
-                            
-                            // ล้างของเก่าและเซฟของใหม่ลงฐานข้อมูลทันที
-                            await dbRef.set(appState);
-                            
-                            document.getElementById('recoveryAlert').classList.add('hidden');
-                            badge.innerHTML = "🟢 กู้คืนข้อมูลสำเร็จ (V8.7)";
-                            
-                        } else {
-                            // ถ้าโครงสร้างปกติแล้ว ก็โหลดข้อมูลตามปกติ
-                            appState = {...appState, ...data};
-                            appState.students = data.students ? Object.values(data.students).filter(i => i !== null) : [];
-                            appState.classExpenses = data.classExpenses ? Object.values(data.classExpenses).filter(i => i !== null) : [];
-                            appState.ledger = data.ledger ? Object.values(data.ledger).filter(i => i !== null) : [];
-                            
-                            if(!appState.dailyLocks) appState.dailyLocks = {};
-                            if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
-                            
-                            badge.innerHTML = "🟢 ฐานข้อมูลนิรภัย (V8.7)";
+                        // 🛡️ ถ้าระบบตรวจพบว่าพยายามโหลดแฟ้มที่มีรหัสผ่านแอดมินอยู่ แต่รายชื่อนักเรียนกลับกลายเป็น 0 คน
+                        if (parsedStudents.length === 0 && data.superAdminPin && Object.keys(data).length > 2) {
+                            console.warn("Safety Lock Triggered! ข้อมูลรายชื่อหายไปอย่างผิดปกติ ระบบทำการล็อกการบันทึกทับ");
+                            throw new Error("Corrupted Data Structure Detected");
                         }
 
-                        // ตรวจสอบความสมบูรณ์ของรายชื่อ
+                        appState = {...appState, ...data};
+                        appState.students = parsedStudents;
+                        appState.classExpenses = parseFirebaseData(data.classExpenses);
+                        appState.ledger = parseFirebaseData(data.ledger);
+                        
+                        if(!appState.dailyLocks) appState.dailyLocks = {};
+                        if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
+                        
                         appState.students.forEach(s => { 
                             if(!s.pin) s.pin="0000"; 
                             if(!s.history) s.history=[]; 
@@ -322,23 +327,50 @@
                             if(s.streak===undefined) s.streak=0; 
                         });
                         
+                        isSystemLockedDueToError = false; // ข้อมูลปลอดภัย ปลดล็อกการเซฟ
+                        document.getElementById('systemLockAlert').classList.add('hidden');
+                        badge.innerHTML = "🟢 ฐานข้อมูลนิรภัย (V8.8)";
+                        badge.className = "text-[10px] sm:text-xs text-emerald-600 font-bold transition-colors";
+                        
                     } else { 
+                        // ตู้เซฟว่างเปล่าแบบคลีนๆ 100% (เริ่มต้นห้องเรียนใหม่)
+                        isSystemLockedDueToError = false; 
                         saveState(); 
-                        badge.innerHTML = "🟢 โครงสร้างพร้อมใช้งาน"; 
+                        badge.innerHTML = "🟢 สร้างโครงสร้างฐานข้อมูลใหม่"; 
                     }
                     if(document.getElementById('stat-total')) renderUI();
                 } catch(e) {
+                    // 🛡️ หากเกิด Error ใดๆ ตอนโหลด จะเข้าสู่โหมดล็อกอัตโนมัติ ห้ามเซฟทับเด็ดขาด!
                     console.error("Data Parse Error:", e);
-                    badge.innerHTML = "🔴 ข้อผิดพลาดในการอ่านข้อมูล";
+                    isSystemLockedDueToError = true;
+                    document.getElementById('systemLockAlert').classList.remove('hidden');
+                    badge.innerHTML = "🔴 ระบบล็อกฉุกเฉิน ป้องกันเซฟทับ!";
+                    badge.className = "text-[10px] sm:text-xs text-rose-500 font-bold transition-colors";
                 }
             }, (error) => { 
                 badge.innerHTML = "🔴 การเชื่อมต่อถูกปฏิเสธ (เช็ค Rules)"; 
             });
         };
 
+        // 🛡️ ระบบเซฟข้อมูลแบบใหม่ (หุ้มเกราะ)
         async function saveState() { 
             if (currentRole === 'STUDENT' && appState.students.length > 0) return;
-            try { await dbRef.set(appState); } catch (err) { console.error("Database error:", err); } 
+            
+            // Safety Lock: ไม่ยอมส่งข้อมูลเปล่าๆ ไปทับของจริงเด็ดขาด
+            if (isSystemLockedDueToError) {
+                console.error("⛔ [BLOCKED] ปฏิเสธการบันทึกทับ: ระบบติดสถานะ Lock จากการประมวลผลข้อมูลผิดพลาด");
+                Swal.fire('ปกป้องข้อมูล!', 'ระบบล็อกการบันทึกอัตโนมัติ เนื่องจากตรวจพบความผิดปกติในการโหลดข้อมูล เพื่อป้องกันยอดเงินเก่าหาย', 'warning');
+                return;
+            }
+
+            try { 
+                // บันทึกแฟ้มหลัก
+                await dbRef.set(appState); 
+                // บันทึกแอบก๊อปปี้ไปไว้ที่แฟ้ม Backup
+                await dbBackupRef.set(appState); 
+            } catch (err) { 
+                console.error("Database error:", err); 
+            } 
         }
 
         window.promptLogin = async function() {
@@ -375,7 +407,7 @@
             let authenticated = false;
             
             if (currentRole === 'SUPER_ADMIN' || currentRole === 'CO_ADMIN') {
-                authenticated = true; // แอดมินข้ามการใส่รหัสผ่าน
+                authenticated = true; 
             } else {
                 const { value: pin } = await Swal.fire({ title: `รหัสตรวจสอบสิทธิ์ส่วนบุคคล`, text: `${s.name} (รหัสเริ่มต้น 0000)`, input: 'password', inputAttributes: { maxlength: 4 }, showCancelButton: true });
                 if (pin) {
@@ -427,6 +459,10 @@
                 roleBadge.textContent = currentRole === 'SUPER_ADMIN' ? '👑 Super' : '🛠️ Co-Admin';
                 roleBadge.className = currentRole === 'SUPER_ADMIN' ? 'hidden sm:inline-block px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full shadow-sm' : 'hidden sm:inline-block px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-sm';
                 
+                // 🛡️ แสดงป้ายเตือนโหลด Excel ทุกครั้งที่เป็นแอดมิน
+                const excelReminder = document.getElementById('excelReminderBanner');
+                if(excelReminder) excelReminder.classList.toggle('hidden', currentRole === 'STUDENT');
+
                 const total = appState.students.length; const paid = appState.students.filter(s => s.isPaidToday).length;
                 const expenses = appState.classExpenses.reduce((s, e) => s + e.amt, 0); const collected = appState.ledger.filter(l => l.type === 'จ่ายค่าห้องประจำวัน').reduce((s, e) => s + e.amt, 0); const net = collected - expenses;
                 document.getElementById('stat-total').innerText = total; document.getElementById('stat-paid').innerText = paid; document.getElementById('stat-unpaid').innerText = total - paid; document.getElementById('stat-balance').innerText = '฿' + net;
@@ -550,7 +586,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `const CACHE_NAME = 'class-cash-v8.7'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
+                const swCode = `const CACHE_NAME = 'class-cash-v8.8'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
                 const blob = new Blob([swCode], { type: 'application/javascript' }); const blobUrl = URL.createObjectURL(blob);
                 navigator.serviceWorker.register(blobUrl, { scope: './' }).catch(()=>{});
             });
