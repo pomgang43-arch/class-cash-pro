@@ -258,10 +258,9 @@
                 const data = snapshot.val();
                 if(data) {
                     appState = {...appState, ...data};
-                    appState.students = Array.isArray(data.students) ? data.students : [];
-                    appState.classExpenses = Array.isArray(data.classExpenses) ? data.classExpenses : [];
-                    appState.ledger = Array.isArray(data.ledger) ? data.ledger : [];
-                    if(!appState.dailyLocks) appState.dailyLocks = {};
+                    appState.students = data.students ? Object.values(data.students) : [];
+                    appState.classExpenses = data.classExpenses ? Object.values(data.classExpenses) : [];
+                    appState.ledger = data.ledger ? Object.values(data.ledger) : [];
                     if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
                     appState.students.forEach(s => { if(!s.pin)s.pin="0000"; if(!s.history)s.history=[]; if(s.cumulativeDebt===undefined)s.cumulativeDebt=0; if(s.streak===undefined)s.streak=0; });
                     badge.innerHTML = "🟢 นิรภัยศูนย์กลางควบคุมออนไลน์ (V8)";
