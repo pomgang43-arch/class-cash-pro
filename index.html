@@ -57,7 +57,7 @@
             </div>
             <div>
                 <h1 class="font-display font-bold text-2xl leading-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-pPurple">Class Cash V8</h1>
-                <p class="text-[10px] sm:text-xs text-slate-500 font-medium" id="connection-status">🟡 กำลังเชื่อมต่อระบบ...</p>
+                <p class="text-[10px] sm:text-xs text-slate-500 font-medium" id="connection-status">🟡 กำลังเชื่อมต่อระบบนิรภัย...</p>
             </div>
         </div>
         <div class="flex items-center gap-2">
@@ -79,6 +79,13 @@
     </nav>
 
     <div class="max-w-5xl mx-auto px-4" id="main-content">
+        <!-- แจ้งเตือนการกู้คืนระบบ -->
+        <div id="recoveryAlert" class="hidden mb-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl p-4 shadow-lg text-white text-center animate-pulse">
+            <i class="fa-solid fa-wand-magic-sparkles text-2xl mb-2"></i>
+            <h3 class="font-bold text-base">ระบบกำลังกู้คืนข้อมูลโครงสร้าง...</h3>
+            <p class="text-xs font-medium opacity-90">ไม่ต้องตกใจครับ แอปกำลังย้ายข้อมูลเข้าตู้เซฟให้ถูกต้อง กรุณารอสักครู่!</p>
+        </div>
+
         <!-- เป้าหมายห้องเรียน -->
         <div class="glass-panel rounded-[2rem] p-5 mb-6 shadow-soft relative overflow-hidden border-l-4 border-l-pPurple">
             <div class="flex justify-between items-center mb-2">
@@ -219,7 +226,7 @@
         </div>
     </div>
 
-    <!-- QR Code Modal (ดีไซน์กดเพื่อขยาย) -->
+    <!-- QR Code Modal -->
     <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3">
         <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-sm relative p-6 sm:p-8 text-center border border-emerald-100">
             <button onclick="closeQrModal()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 btn-bouncy flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
@@ -241,7 +248,7 @@
         </div>
     </div>
 
-    <!-- ส่วนสำคัญที่สุด: JavaScript ตัวควบคุมระบบ (แก้ไขบั๊กจอขาวแล้ว 100%) -->
+    <!-- JavaScript (V8.7 Recovery Edition) -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBwt6DK12lt5zTso4mTi-B3GJE7Af8y54M",
@@ -266,48 +273,66 @@
         function isTodayLocked() { return appState.dailyLocks && appState.dailyLocks[getTodayDateString()] === true; }
         window.processImageFile = function(file) { return new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if(w>h){if(w>150){h*=150/w;w=150;}}else{if(h>150){w*=150/h;h=150;}} canvas.width=w;canvas.height=h; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h); resolve(canvas.toDataURL('image/jpeg',0.5)); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
 
-        // ฟังก์ชันพระเอกที่ช่วยแก้ปัญหาจอขาวและข้อมูลล่องหน
-        function parseFirebaseData(rawData) {
-            if (!rawData) return [];
-            if (Array.isArray(rawData)) return rawData.filter(item => item !== null && item !== undefined); // ล้างค่า null
-            if (typeof rawData === 'object') return Object.values(rawData).filter(item => item !== null);
-            return [];
-        }
-
         window.onload = () => {
             const badge = document.getElementById('connection-status');
-            dbRef.on('value', (snapshot) => {
+            dbRef.on('value', async (snapshot) => {
                 try {
                     const data = snapshot.val();
                     if(data) {
-                        appState = {...appState, ...data};
                         
-                        // กรองข้อมูลให้เป็น Array แบบสมบูรณ์ ป้องกันโค้ดพัง
-                        appState.students = parseFirebaseData(data.students);
-                        appState.classExpenses = parseFirebaseData(data.classExpenses);
-                        appState.ledger = parseFirebaseData(data.ledger);
-                        
-                        if(!appState.dailyLocks) appState.dailyLocks = {};
-                        if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
-                        
+                        // 🔥 ระบบกู้ภัยอัตโนมัติ (Auto-Recovery)
+                        // ตรวจสอบว่าข้อมูลไหลมากองข้างนอกโดยไม่มีโฟลเดอร์ students หรือไม่
+                        if (!data.students && (data["0"] || data["1"] || (Object.keys(data).length > 0 && typeof data[Object.keys(data)[0]] === 'object' && data[Object.keys(data)[0]].name))) {
+                            
+                            document.getElementById('recoveryAlert').classList.remove('hidden');
+                            console.warn("ตรวจพบโครงสร้างข้อมูลผิดปกติ กำลังดำเนินการกู้คืน...");
+                            
+                            // ดูดข้อมูลทั้งหมดมาจัดลงกล่อง students
+                            let recoveredStudents = Object.values(data).filter(item => typeof item === 'object' && item.name);
+                            
+                            // จัดเรียงกลับเข้าสู่โครงสร้างที่ถูกต้อง
+                            appState.students = recoveredStudents;
+                            appState.classExpenses = [];
+                            appState.ledger = [];
+                            
+                            // ล้างของเก่าและเซฟของใหม่ลงฐานข้อมูลทันที
+                            await dbRef.set(appState);
+                            
+                            document.getElementById('recoveryAlert').classList.add('hidden');
+                            badge.innerHTML = "🟢 กู้คืนข้อมูลสำเร็จ (V8.7)";
+                            
+                        } else {
+                            // ถ้าโครงสร้างปกติแล้ว ก็โหลดข้อมูลตามปกติ
+                            appState = {...appState, ...data};
+                            appState.students = data.students ? Object.values(data.students).filter(i => i !== null) : [];
+                            appState.classExpenses = data.classExpenses ? Object.values(data.classExpenses).filter(i => i !== null) : [];
+                            appState.ledger = data.ledger ? Object.values(data.ledger).filter(i => i !== null) : [];
+                            
+                            if(!appState.dailyLocks) appState.dailyLocks = {};
+                            if(!appState.lastActiveDate) appState.lastActiveDate = getTodayDateString();
+                            
+                            badge.innerHTML = "🟢 ฐานข้อมูลนิรภัย (V8.7)";
+                        }
+
+                        // ตรวจสอบความสมบูรณ์ของรายชื่อ
                         appState.students.forEach(s => { 
                             if(!s.pin) s.pin="0000"; 
                             if(!s.history) s.history=[]; 
                             if(s.cumulativeDebt===undefined) s.cumulativeDebt=0; 
                             if(s.streak===undefined) s.streak=0; 
                         });
-                        badge.innerHTML = "🟢 ฐานข้อมูลนิรภัย (V8.6) ทำงานปกติ";
+                        
                     } else { 
                         saveState(); 
-                        badge.innerHTML = "🟢 สร้างโครงสร้างฐานข้อมูลใหม่"; 
+                        badge.innerHTML = "🟢 โครงสร้างพร้อมใช้งาน"; 
                     }
                     if(document.getElementById('stat-total')) renderUI();
                 } catch(e) {
                     console.error("Data Parse Error:", e);
-                    badge.innerHTML = "🔴 ข้อผิดพลาดในการแปลข้อมูล";
+                    badge.innerHTML = "🔴 ข้อผิดพลาดในการอ่านข้อมูล";
                 }
             }, (error) => { 
-                badge.innerHTML = "🔴 การเชื่อมต่อถูกปฏิเสธ"; 
+                badge.innerHTML = "🔴 การเชื่อมต่อถูกปฏิเสธ (เช็ค Rules)"; 
             });
         };
 
@@ -525,7 +550,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swCode = `const CACHE_NAME = 'class-cash-v8.6'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
+                const swCode = `const CACHE_NAME = 'class-cash-v8.7'; const urlsToCache = ['./', './index.html', './manifest.json', './app-icon.png']; self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); self.skipWaiting(); }); self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => { if(k !== CACHE_NAME) return caches.delete(k); })))); self.clients.claim(); }); self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
                 const blob = new Blob([swCode], { type: 'application/javascript' }); const blobUrl = URL.createObjectURL(blob);
                 navigator.serviceWorker.register(blobUrl, { scope: './' }).catch(()=>{});
             });
